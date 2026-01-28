@@ -2,89 +2,146 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
+    <title>Cinemax – A moziélmény kezdete</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cinemax - Élmények, amik megmaradnak</title>
-    
-    <!-- Bootstrap CSS -->
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css">
-    <!-- Közös CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="css/common.css">
-    <!-- Oldal specifikus CSS -->
     <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="index.html">
-                <i class="bi bi-film"></i> CINEMAX
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Főoldal</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="movies.html">Filmek</a>
-                    </li>
 
-                    <!-- ÚJ: Bookings -->
-                     <li class="nav-item" id="bookingsNav" style="display:none;">
-                        <a class="nav-link" href="bookings.html">Foglalások</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about.html">Rólunk</a>
-                    </li>
-                    <li class="nav-item ms-3">
-                        <a href="login.html" class="btn btn-outline-gold" id="loginBtn">
-                            <i class="bi bi-person"></i> Bejelentkezés
-                        </a>
-                        <a href="profile.html" class="btn btn-gold" id="userBtn" style="display:none;">
-                            <i class="bi bi-person-circle"></i> <span id="userName"></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-content">
-            <div class="hero-icon">🎬</div>
-            <h1 class="hero-title">CINEMAX</h1>
-            <p class="hero-subtitle">Élmények, amik megmaradnak</p>
-            <a href="movies.html" class="btn btn-gold btn-lg">
-                Filmek megtekintése <i class="bi bi-arrow-right"></i>
-            </a>
-        </div>
-    </section>
-
-    <!-- Featured Movies -->
-    <section class="py-5" style="background: #111827;">
-        <div class="container">
-            <h2 class="section-title text-center">Most a mozikban</h2>
-            <div class="row g-4" id="featuredMovies"></div>
-        </div>
-    </section>
-
-    <!-- Toast Container -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div id="liveToast" class="toast" role="alert">
-            <div class="toast-body" id="toastMessage"></div>
+<!-- NAV -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">
+            <i class="bi bi-film"></i> CINEMAX
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="index.html">Főoldal</a></li>
+                <li class="nav-item"><a class="nav-link" href="movies.html">Filmek</a></li>
+                <li class="nav-item"><a class="nav-link" href="about.html">Rólunk</a></li>
+                <li class="nav-item ms-3">
+                    <a href="login.html" class="btn btn-outline-gold" id="loginBtn">
+                        <i class="bi bi-person"></i> Bejelentkezés
+                    </a>
+                    <a href="profile.html" class="btn btn-gold" id="userBtn" style="display:none;">
+                        <i class="bi bi-person-circle"></i> <span id="userName"></span>
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
+</nav>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-    <!-- Közös JavaScript -->
-    <script src="js/common.js"></script>
-    <!-- Oldal specifikus JavaScript -->
-    <script src="js/home.js"></script>
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+        <h1>Ez nem csak egy film.</h1>
+        <p>
+            Ez a pillanat, amikor elfelejted a külvilágot.
+            A fények elhalványulnak, a hang körbevesz,
+            és csak a történet marad.
+        </p>
+
+        <div class="hero-actions">
+            <a href="movies.html" class="btn btn-gold btn-lg">
+                <i class="bi bi-ticket-perforated"></i> Filmek & Jegyvásárlás
+            </a>
+            <a href="about.html" class="btn btn-outline-gold btn-lg">
+                <i class="bi bi-info-circle"></i> Mi ez a Cinemax?
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- STATS -->
+<section class="home-stats">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="stat-box">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-text">év moziélmény</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-box">
+                    <div class="stat-number">1 000 000+</div>
+                    <div class="stat-text">néző</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-box">
+                    <div class="stat-number">5</div>
+                    <div class="stat-text">modern terem</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="home-experience">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Miért más a Cinemax?</h2>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="exp-card">
+                    <i class="bi bi-aspect-ratio"></i>
+                    <h3>Hatalmas vászon</h3>
+                    <p>
+                        A látvány betölti a teret, és teljesen magával ragad.
+                        Itt minden részlet számít.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="exp-card">
+                    <i class="bi bi-volume-up"></i>
+                    <h3>Térhangzás</h3>
+                    <p>
+                        A hang nem csak szól – körülvesz.
+                        Minden suttogás és robbanás a helyén van.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="exp-card">
+                    <i class="bi bi-person-arms-up"></i>
+                    <h3>Kényelem</h3>
+                    <p>
+                        Kényelmes ülések, bőséges lábtér,
+                        hogy a filmre figyelhess – nem a székre.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="home-cta">
+    <div class="container text-center">
+        <h2>Készen állsz a következő élményre?</h2>
+        <p>Válassz filmet, foglalj helyet, és hagyd magad beszippantani.</p>
+        <a href="movies.html" class="btn btn-gold btn-lg mt-3">
+            <i class="bi bi-play-circle"></i> Kezdjük!
+        </a>
+    </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script src="js/common.js"></script>
 </body>
 </html>
