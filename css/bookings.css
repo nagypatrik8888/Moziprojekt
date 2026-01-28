@@ -1,0 +1,32 @@
+/* Bookings Page Styles */
+.bookings-container {
+    padding-top: 100px;
+    min-height: 100vh;
+}
+
+.booking-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 1.5rem;
+    transition: all 0.3s;
+}
+
+.booking-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border-color: rgba(251, 191, 36, 0.2);
+}
+
+.no-bookings {
+    text-align: center;
+    padding: 5rem 2rem;
+}
+
+.no-bookings-icon {
+    font-size: 6rem;
+    color: var(--primary-gold);
+    margin-bottom: 2rem;
+}
