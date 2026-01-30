@@ -1,92 +1,103 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cinemax – A moziélmény kezdete</title>
-
-  <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css">
-
-  <!-- Csak ez kell ehhez az oldalhoz -->
-  <link rel="stylesheet" href="css/home.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinemax - Élmények, amik megmaradnak</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css">
+    <!-- Közös CSS -->
+    <link rel="stylesheet" href="css/common.css">
+    <!-- Oldal specifikus CSS -->
+    <link rel="stylesheet" href="css/home.css">
 </head>
-
 <body>
 
-  <!-- NAVBAR -->
-  <header class="topbar">
-    <div class="topbar__inner">
-      <a class="brand" href="index.html" aria-label="Cinemax főoldal">
-        <i class="bi bi-film brand__icon"></i>
-        <span class="brand__text">CINEMAX</span>
-      </a>
-
-      <nav class="nav">
-        <a class="nav__link nav__link--active" href="index.html">FŐOLDAL</a>
-        <a class="nav__link" href="movies.html">FILMEK</a>
-        <a class="nav__link" href="about.html">RÓLUNK</a>
-      </nav>
-
-      <a class="btn btn--outline btn--pill" href="login.html">
-        <i class="bi bi-person"></i>
-        Bejelentkezés
-      </a>
-    </div>
-  </header>
-
-  <!-- HERO -->
-  <main class="hero">
-    <div class="hero__overlay"></div>
-
-    <div class="hero__content">
-      <!-- ITT VAN A CSERE: logó a szöveg helyén -->
-      <div class="hero-logo">
-        <div class="hero-logo__icon" aria-hidden="true">
-          <i class="bi bi-camera-reels"></i>
-        </div>
-
-        <h1 class="hero-logo__text" aria-label="Cinemax">
-          <span class="hero-logo__cinema">CINEMA</span><span class="hero-logo__max">X</span>
-        </h1>
-
-        <p class="hero-logo__tagline">ÉLMÉNYEK, AMIK MEGMARADNAK</p>
-      </div>
-
-      <!-- GOMBOK MARADNAK -->
-      <div class="hero__buttons">
-        <a class="btn btn--primary btn--big btn--pill" href="movies.html">
-          <i class="bi bi-ticket-perforated"></i>
-          FILMEK &amp; JEGYVÁSÁRLÁS
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">
+            <i class="bi bi-film"></i> CINEMAX
         </a>
-
-        <a class="btn btn--outline btn--big btn--pill" href="about.html">
-          <i class="bi bi-info-circle"></i>
-          Mi ez a Cinemax?
-        </a>
-      </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="index.html">Főoldal</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="movies.html">Filmek</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">Rólunk</a>
+                </li>
+                <li class="nav-item ms-3">
+                    <a href="login.html" class="btn btn-outline-gold" id="loginBtn">
+                        <i class="bi bi-person"></i> Bejelentkezés
+                    </a>
+                    <a href="profile.html" class="btn btn-gold" id="userBtn" style="display:none;">
+                        <i class="bi bi-person-circle"></i> <span id="userName"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
+</nav>
 
-    <!-- STAT KÁRTYÁK (mint nálad alul) -->
-    <section class="stats" aria-label="Statisztikák">
-      <div class="stats__inner">
-        <div class="stat">
-          <div class="stat__value">15+</div>
-          <div class="stat__label">év moziélmény</div>
-        </div>
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content text-center">
+        <div class="hero-icon">🎬</div>
+        <h1 class="hero-title">CINEMAX</h1>
+        <p class="hero-subtitle">Élmények, amik megmaradnak</p>
 
-        <div class="stat">
-          <div class="stat__value">1 000 000+</div>
-          <div class="stat__label">néző</div>
+        <!-- CSAK EGY GOMB -->
+        <div class="mt-4">
+            <a href="movies.html" class="btn btn-gold btn-lg">
+                🎥 Filmek megtekintése
+            </a>
         </div>
+    </div>
+</section>
 
-        <div class="stat">
-          <div class="stat__value">5</div>
-          <div class="stat__label">modern terem</div>
+<!-- ÉRDEKESSÉG SZEKCIÓ -->
+<section class="py-5" style="background:#0f172a;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10 text-center">
+                <h2 class="section-title mb-4"> Tudtad?</h2>
+                <p class="text-muted fs-5">
+                    Az első nyilvános filmvetítést 1895-ben tartották Párizsban,  
+                    és kevesebb mint <strong>50 másodpercig</strong> tartott.
+                </p>
+                <p class="text-muted fs-5">
+                    Ma egy átlagos mozifilm több mint <strong>120 perc</strong> –  
+                    de az élmény ugyanaz maradt: kikapcsol, beszippant, emlékezetes.
+                </p>
+                <p class="mt-4 fst-italic text-secondary">
+                    „A mozi nem csak film. Élmény.” 🍿
+                </p>
+            </div>
         </div>
-      </div>
-    </section>
-  </main>
+    </div>
+</section>
+
+<!-- Toast -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast" role="alert">
+        <div class="toast-body" id="toastMessage"></div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/home.js"></script>
 
 </body>
 </html>

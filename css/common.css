@@ -197,3 +197,41 @@ body {
         border-bottom: none;
     }
 }
+/* === SZÖVEGEK LÁTHATÓSÁGA FIX === */
+
+/* Alap szöveg */
+body,
+p,
+span,
+li,
+small,
+label,
+.text-muted,
+.text-secondary {
+    color: #ffffff !important;
+}
+
+/* Címsorok */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff !important;
+}
+
+/* Linkek */
+a {
+    color: #ffffff;
+}
+
+a:hover {
+    color: #fbbf24; /* arany hover marad */
+}
+
+/* Bootstrap leíró szövegek */
+.lead,
+.card-text {
+    color: #ffffff !important;
+}
+
+/* Idézet / dőlt szöveg */
+.fst-italic {
+    color: #e5e7eb !important;
+}
