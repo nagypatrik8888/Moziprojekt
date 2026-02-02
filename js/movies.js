@@ -26,6 +26,10 @@ function resetBookingState(movieId) {
     };
 }
 
+/* =========================
+   MOVIES LIST + FILTER
+========================= */
+
 function renderMovies(category) {
     currentFilter = category;
 
@@ -105,7 +109,9 @@ function toggleFavorite(movieId) {
     renderMovies(currentFilter);
 }
 
-/* ===== Booking ===== */
+/* =========================
+   BOOKING MODAL
+========================= */
 
 function openBookingModal(movieId) {
     const currentUser = getCurrentUser();
@@ -124,18 +130,35 @@ function openBookingModal(movieId) {
     document.getElementById('bookingMovieTitle').textContent = movie.title;
     document.getElementById('bookingMovieMeta').textContent = `${movie.category} • ${movie.duration} • ⭐ ${movie.rating}`;
 
-    // date init
+    // ✅ date init (CSAK AKTUÁLIS HÉT: hétfő–vasárnap)
     const dateInput = document.getElementById('bookingDate');
-    const today = new Date();
-    dateInput.min = toISODate(today);
-    dateInput.value = toISODate(today);
+    const now = new Date();
+
+    const weekStart = startOfWeek(now); // hétfő
+    const weekEnd = endOfWeek(now);     // vasárnap
+
+    dateInput.min = toISODate(weekStart);
+    dateInput.max = toISODate(weekEnd);
+
+    const todayIso = toISODate(now);
+    dateInput.value = (todayIso >= dateInput.min && todayIso <= dateInput.max)
+        ? todayIso
+        : dateInput.min;
+
     bookingState.date = dateInput.value;
 
-    renderQuickDays(today);
+    // quick days: hétfő–vasárnap
+    renderQuickDays(weekStart);
+
+    // times
     renderTimes(movie.showtimes);
 
     // bind date change
     dateInput.onchange = () => {
+        // extra védelem: ha valaki kézzel beírna rosszat
+        if (dateInput.value < dateInput.min) dateInput.value = dateInput.min;
+        if (dateInput.value > dateInput.max) dateInput.value = dateInput.max;
+
         bookingState.date = dateInput.value || null;
         bookingState.time = null;
         bookingState.selectedSeats = [];
@@ -159,7 +182,7 @@ function openBookingModal(movieId) {
     const modalEl = document.getElementById('bookingModal');
     new bootstrap.Modal(modalEl).show();
 
-    // seat click delegation (csak egyszer)
+    // seat click delegation
     const seatsArea = document.getElementById('seatsArea');
     seatsArea.onclick = (e) => {
         const seatEl = e.target.closest('.seat[data-seat]');
@@ -237,11 +260,13 @@ function enforceSeatCount() {
     }
 }
 
-function renderQuickDays(startDate) {
+function renderQuickDays(weekStartDate) {
     const wrap = document.getElementById('quickDays');
+    if (!wrap) return;
+
     const days = [];
     for (let i = 0; i < 7; i++) {
-        const d = new Date(startDate);
+        const d = new Date(weekStartDate);
         d.setDate(d.getDate() + i);
         days.push(d);
     }
@@ -255,8 +280,10 @@ function renderQuickDays(startDate) {
     wrap.querySelectorAll('button[data-date]').forEach(btn => {
         btn.onclick = () => {
             const iso = btn.dataset.date;
+
             const dateInput = document.getElementById('bookingDate');
             dateInput.value = iso;
+
             bookingState.date = iso;
             bookingState.time = null;
             bookingState.selectedSeats = [];
@@ -336,6 +363,7 @@ function buildSeatGridHTML(occupiedSeats, selectedSeats) {
         const colsHtml = Array.from({length: SEAT_LAYOUT.cols}, (_, i) => {
             const num = i + 1;
             const id = `${r}${num}`;
+
             const cls = [
                 'seat',
                 occ.has(id) ? 'occupied' : '',
@@ -423,7 +451,10 @@ function confirmBooking() {
     if (modal) modal.hide();
 }
 
-/* occupied seats per show */
+/* =========================
+   OCCUPIED SEATS STORAGE
+========================= */
+
 function showKey(movieId, date, time) { return `${movieId}|${date}|${time}`; }
 
 function getOccupiedForShow(movieId, date, time) {
@@ -437,9 +468,33 @@ function setOccupiedForShow(movieId, date, time, seats) {
     setOccupiedSeats(store);
 }
 
+/* =========================
+   DATE HELPERS
+========================= */
+
 function toISODate(d) {
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
+}
+
+// hétfő 00:00:00
+function startOfWeek(d) {
+    const x = new Date(d);
+    x.setHours(0,0,0,0);
+    // hétfő = 1 ... vasárnap = 0
+    const day = x.getDay();
+    const diffToMonday = (day === 0 ? -6 : 1 - day);
+    x.setDate(x.getDate() + diffToMonday);
+    return x;
+}
+
+// vasárnap 23:59:59 (max-hoz úgyis csak a dátum kell)
+function endOfWeek(d) {
+    const monday = startOfWeek(d);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    sunday.setHours(23,59,59,999);
+    return sunday;
 }
