@@ -28,9 +28,32 @@ function resetBookingState(movieId) {
 
 function renderMovies(category) {
     currentFilter = category;
-    const filtered = category === 'Összes' ? movies : movies.filter(m => m.category === category);
+
+    const filtered =
+        category === 'Összes'
+            ? movies
+            : movies.filter(m => m.category === category);
+
     const grid = document.getElementById('allMovies');
     if (!grid) return;
+
+    // ✅ ÜRES KATEGÓRIA ÜZENET
+    if (filtered.length === 0) {
+        const cat = (category || '').toLowerCase();
+
+        grid.innerHTML = `
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="bi bi-film" style="font-size:4rem; opacity:0.55;"></i>
+                    <h3 class="mt-3">Ezen a héten nem vetítünk ${cat} filmet.</h3>
+                    <p class="text-muted mt-2 mb-0">
+                        Válassz másik kategóriát, vagy nézz vissza később 🎬
+                    </p>
+                </div>
+            </div>
+        `;
+        return;
+    }
 
     const favorites = getFavorites();
 
@@ -62,7 +85,7 @@ function renderMovies(category) {
 
 function filterMovies(category) {
     document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+    if (typeof event !== 'undefined' && event?.target) event.target.classList.add('active');
     renderMovies(category);
 }
 
@@ -314,10 +337,10 @@ function buildSeatGridHTML(occupiedSeats, selectedSeats) {
             const num = i + 1;
             const id = `${r}${num}`;
             const cls = [
-    'seat',
-    occ.has(id) ? 'occupied' : '',
-    sel.has(id) ? 'selected' : ''
-].join(' ').trim();
+                'seat',
+                occ.has(id) ? 'occupied' : '',
+                sel.has(id) ? 'selected' : ''
+            ].join(' ').trim();
 
             return `<div class="${cls}" data-seat="${id}" title="${id}">${num}</div>`;
         }).join('');
