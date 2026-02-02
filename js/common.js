@@ -1,65 +1,65 @@
 // Közös adatok és segédfüggvények
 const movies = [
-    {
-        id: 1,
-        title: 'Gladiator II',
-        category: 'Akció',
-        rating: 8.5,
-        duration: '148 perc',
-        description: 'Lucius folytatja Maximus küzdelmét a római arénában.',
-        poster: 'https://images.unsplash.com/photo-1533613220915-609f661a6fe1?w=400&h=600&fit=crop',
-        showtimes: ['14:00', '17:30', '20:45']
-    },
-    {
-        id: 2,
-        title: 'Dune: Part Two',
-        category: 'Sci-Fi',
-        rating: 9.2,
-        duration: '166 perc',
-        description: 'Paul Atreides legendás utazása folytatódik.',
-        poster: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400&h=600&fit=crop',
-        showtimes: ['13:00', '17:00', '20:30']
-    },
-    {
-        id: 3,
-        title: 'Deadpool & Wolverine',
-        category: 'Vígjáték',
-        rating: 9.0,
-        duration: '127 perc',
-        description: 'Wade Wilson és Logan legendás találkozása.',
-        poster: 'https://images.unsplash.com/photo-1611604548018-d56bbd85d681?w=400&h=600&fit=crop',
-        showtimes: ['13:30', '16:45', '20:00']
-    },
-    {
-        id: 4,
-        title: 'The First Omen',
-        category: 'Horror',
-        rating: 7.9,
-        duration: '119 perc',
-        description: 'Egy fiatal apáca felfedezi a sötét összeesküvést.',
-        poster: 'https://images.unsplash.com/photo-1603457979-b5ddeb5dc2d8?w=400&h=600&fit=crop',
-        showtimes: ['19:00', '21:45', '23:30']
-    },
-    {
-        id: 5,
-        title: 'Furiosa',
-        category: 'Akció',
-        rating: 8.8,
-        duration: '148 perc',
-        description: 'Mad Max univerzumában játszódó eredettörténet.',
-        poster: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=600&fit=crop',
-        showtimes: ['15:00', '18:00', '21:00']
-    },
-    {
-        id: 6,
-        title: 'Challengers',
-        category: 'Vígjáték',
-        rating: 7.8,
-        duration: '131 perc',
-        description: 'Egy tenisz-szerelmi háromszög története.',
-        poster: 'https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0?w=400&h=600&fit=crop',
-        showtimes: ['14:30', '17:45', '20:30']
-    }
+  {
+    id: 1,
+    title: "Avatar (2009)",
+    category: "Sci-Fi",
+    duration: "162 perc",
+    rating: 7.8,
+    poster: "https://image.tmdb.org/t/p/original/6EiRUJpuoeQPghrs3YNktfnqOVh.jpg",
+    description: "A James Cameron által rendezett epikus sci-fi kaland Pandora világában.",
+    showtimes: ["13:30", "16:45", "20:00"]
+  },
+  {
+    id: 2,
+    title: "Avengers: Endgame",
+    category: "Akció",
+    duration: "181 perc",
+    rating: 8.4,
+    poster: "https://image.tmdb.org/t/p/original/ulzhLuWrPK07P1YkdWQLZnQh1JL.jpg",
+    description: "A Bosszúállók utolsó csatája Thanos ellen.",
+    showtimes: ["14:00", "17:30", "21:00"]
+  },
+  {
+    id: 3,
+    title: "Star Wars: The Force Awakens",
+    category: "Sci-Fi",
+    duration: "138 perc",
+    rating: 7.8,
+    poster: "https://image.tmdb.org/t/p/original/wqnLdwVXoBjKibFRR5U3y0aDUhs.jpg",
+    description: "A Star Wars saga új fejezete, ahol új hősök csatlakoznak a harcba.",
+    showtimes: ["12:30", "15:45", "19:15"]
+  },
+  {
+    id: 4,
+    title: "Jurassic World",
+    category: "Akció",
+    duration: "124 perc",
+    rating: 7.0,
+    poster: "https://image.tmdb.org/t/p/original/rhr4y79GpxQF9IsfJItRXVaoGs4.jpg",
+    description: "Dinoszauruszok újra életre kelnek egy élő tematikus parkban.",
+    showtimes: ["13:45", "17:00", "20:30"]
+  },
+  {
+    id: 5,
+    title: "Spider-Man: No Way Home",
+    category: "Akció",
+    duration: "148 perc",
+    rating: 8.3,
+    poster: "https://image.tmdb.org/t/p/original/rjbNpRMoVvqHmhmksbokcyCr7wn.jpg",
+    description: "Spider-Man visszatér, hogy szembenézzen a multiverzum fenyegetéseivel.",
+    showtimes: ["14:30", "18:00", "21:30"]
+  },
+  {
+    id: 6,
+    title: "Zootopia",
+    category: "Vígjáték",
+    duration: "108 perc",
+    rating: 8.0,
+    poster: "https://image.tmdb.org/t/p/original/hlK0e0wAQ3VLuJcsfIYPvb4JVud.jpg",
+    description: "Egy nyúl és egy róka kalandjai egy hatalmas állatvárosban.",
+    showtimes: ["11:45", "14:15", "17:00"]
+  }
 ];
 
 // Állapot tárolása localStorage-ban
