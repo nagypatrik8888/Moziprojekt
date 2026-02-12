@@ -1,0 +1,11 @@
+D:\nagyp\School projects\hx\vizsgaremek\Moziprojekt\backend\mozi_backend\src\main\java\com\mycompany\mozi_backend\JakartaRestConfiguration.java
+D:\nagyp\School projects\hx\vizsgaremek\Moziprojekt\backend\mozi_backend\src\main\java\com\mycompany\mozi_backend\resources\JakartaEE11Resource.java
+D:\nagyp\School projects\hx\vizsgaremek\Moziprojekt\backend\mozi_backend\src\main\java\hu\patrik\mozi\controller\AuthController.java
+D:\nagyp\School projects\hx\vizsgaremek\Moziprojekt\backend\mozi_backend\src\main\java\hu\patrik\mozi\controller\HealthController.java
+D:\nagyp\School projects\hx\vizsgaremek\Moziprojekt\backend\mozi_backend\src\main\java\hu\patrik\mozi\controller\JaxrsConfig.java
+D:\nagyp\School projects\hx\vizsgaremek\Moziprojekt\backend\mozi_backend\src\main\java\hu\patrik\mozi\controller\UserController.java
+D:\nagyp\School projects\hx\vizsgaremek\Moziprojekt\backend\mozi_backend\src\main\java\hu\patrik\mozi\dto\LoginRequest.java
+D:\nagyp\School projects\hx\vizsgaremek\Moziprojekt\backend\mozi_backend\src\main\java\hu\patrik\mozi\dto\LoginResponse.java
+D:\nagyp\School projects\hx\vizsgaremek\Moziprojekt\backend\mozi_backend\src\main\java\hu\patrik\mozi\model\User.java
+D:\nagyp\School projects\hx\vizsgaremek\Moziprojekt\backend\mozi_backend\src\main\java\hu\patrik\mozi\security\JwtUtil.java
+D:\nagyp\School projects\hx\vizsgaremek\Moziprojekt\backend\mozi_backend\src\main\java\hu\patrik\mozi\service\UserService.java

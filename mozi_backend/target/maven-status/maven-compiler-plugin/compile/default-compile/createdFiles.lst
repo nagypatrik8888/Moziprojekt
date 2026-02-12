@@ -1,0 +1,11 @@
+hu\patrik\mozi\controller\AuthController.class
+hu\patrik\mozi\service\UserService.class
+hu\patrik\mozi\controller\JaxrsConfig.class
+hu\patrik\mozi\controller\UserController.class
+hu\patrik\mozi\dto\LoginResponse.class
+hu\patrik\mozi\security\JwtUtil.class
+hu\patrik\mozi\controller\HealthController.class
+hu\patrik\mozi\model\User.class
+hu\patrik\mozi\dto\LoginRequest.class
+com\mycompany\mozi_backend\JakartaRestConfiguration.class
+com\mycompany\mozi_backend\resources\JakartaEE11Resource.class
