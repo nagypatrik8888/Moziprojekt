@@ -44,7 +44,6 @@ function renderMovies(category) {
     // ✅ ÜRES KATEGÓRIA ÜZENET
     if (filtered.length === 0) {
         const cat = (category || '').toLowerCase();
-
         grid.innerHTML = `
             <div class="col-12">
                 <div class="text-center py-5">
@@ -130,32 +129,28 @@ function openBookingModal(movieId) {
     document.getElementById('bookingMovieTitle').textContent = movie.title;
     document.getElementById('bookingMovieMeta').textContent = `${movie.category} • ${movie.duration} • ⭐ ${movie.rating}`;
 
-    // ✅ date init (CSAK AKTUÁLIS HÉT: hétfő–vasárnap)
+    // ✅ DÁTUM: CSAK AKTUÁLIS HÉT, DE MÚLT NAP NINCS
     const dateInput = document.getElementById('bookingDate');
+
     const now = new Date();
+    const today = startOfDay(now);
+    const weekEnd = endOfWeek(now); // vasárnap
 
-    const weekStart = startOfWeek(now); // hétfő
-    const weekEnd = endOfWeek(now);     // vasárnap
+    dateInput.min = toISODate(today);          // <-- MAI NAP A MIN
+    dateInput.max = toISODate(weekEnd);        // <-- HÉT VÉGE A MAX
 
-    dateInput.min = toISODate(weekStart);
-    dateInput.max = toISODate(weekEnd);
-
-    const todayIso = toISODate(now);
-    dateInput.value = (todayIso >= dateInput.min && todayIso <= dateInput.max)
-        ? todayIso
-        : dateInput.min;
-
+    dateInput.value = toISODate(today);        // alap: ma
     bookingState.date = dateInput.value;
 
-    // quick days: hétfő–vasárnap
-    renderQuickDays(weekStart);
+    // quick days: MA -> vasárnap
+    renderQuickDaysRange(today, weekEnd);
 
     // times
     renderTimes(movie.showtimes);
 
     // bind date change
     dateInput.onchange = () => {
-        // extra védelem: ha valaki kézzel beírna rosszat
+        // extra védelem: kézi beírás ellen is
         if (dateInput.value < dateInput.min) dateInput.value = dateInput.min;
         if (dateInput.value > dateInput.max) dateInput.value = dateInput.max;
 
@@ -260,15 +255,16 @@ function enforceSeatCount() {
     }
 }
 
-function renderQuickDays(weekStartDate) {
+function renderQuickDaysRange(startDate, endDate) {
     const wrap = document.getElementById('quickDays');
     if (!wrap) return;
 
+    const start = startOfDay(startDate);
+    const end = startOfDay(endDate);
+
     const days = [];
-    for (let i = 0; i < 7; i++) {
-        const d = new Date(weekStartDate);
-        d.setDate(d.getDate() + i);
-        days.push(d);
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        days.push(new Date(d));
     }
 
     wrap.innerHTML = days.map(d => {
@@ -409,6 +405,26 @@ function confirmBooking() {
         return;
     }
 
+    // extra védelem: ha valaki mégis manipulálná a dátumot
+    const now = new Date();
+    const todayIso = toISODate(startOfDay(now));
+    const weekEndIso = toISODate(endOfWeek(now));
+    if (bookingState.date < todayIso || bookingState.date > weekEndIso) {
+        showToast('Csak a mai naptól az aktuális hét végéig tudsz foglalni!', true);
+        bookingState.date = todayIso;
+        bookingState.time = null;
+        bookingState.selectedSeats = [];
+        const dateInput = document.getElementById('bookingDate');
+        dateInput.min = todayIso;
+        dateInput.max = weekEndIso;
+        dateInput.value = todayIso;
+        renderQuickDaysRange(startOfDay(now), endOfWeek(now));
+        updateTimesActive();
+        renderSeats();
+        updateSummary();
+        return;
+    }
+
     const occupiedNow = new Set(getOccupiedForShow(bookingState.movieId, bookingState.date, bookingState.time));
     if (bookingState.selectedSeats.some(s => occupiedNow.has(s))) {
         showToast('Valaki közben lefoglalt egy széket. Válassz másikat!', true);
@@ -479,22 +495,19 @@ function toISODate(d) {
     return `${yyyy}-${mm}-${dd}`;
 }
 
-// hétfő 00:00:00
-function startOfWeek(d) {
+function startOfDay(d) {
     const x = new Date(d);
     x.setHours(0,0,0,0);
-    // hétfő = 1 ... vasárnap = 0
-    const day = x.getDay();
-    const diffToMonday = (day === 0 ? -6 : 1 - day);
-    x.setDate(x.getDate() + diffToMonday);
     return x;
 }
 
 // vasárnap 23:59:59 (max-hoz úgyis csak a dátum kell)
 function endOfWeek(d) {
-    const monday = startOfWeek(d);
-    const sunday = new Date(monday);
-    sunday.setDate(monday.getDate() + 6);
-    sunday.setHours(23,59,59,999);
-    return sunday;
+    const x = new Date(d);
+    x.setHours(0,0,0,0);
+    const day = x.getDay(); // vasárnap=0
+    const diffToSunday = (day === 0) ? 0 : (7 - day);
+    x.setDate(x.getDate() + diffToSunday);
+    x.setHours(23,59,59,999);
+    return x;
 }

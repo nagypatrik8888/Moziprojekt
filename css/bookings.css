@@ -4,22 +4,6 @@
     min-height: 100vh;
 }
 
-.booking-card {
-    background: var(--card-bg);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    margin-bottom: 1.5rem;
-    transition: all 0.3s;
-}
-
-.booking-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    border-color: rgba(251, 191, 36, 0.2);
-}
-
 .no-bookings {
     text-align: center;
     padding: 5rem 2rem;
@@ -29,4 +13,225 @@
     font-size: 6rem;
     color: var(--primary-gold);
     margin-bottom: 2rem;
+}
+
+/* ===== Cinema Ticket Card ===== */
+.ticket-card {
+    display: grid;
+    grid-template-columns: 230px 1fr 210px;
+    gap: 0;
+    background: rgba(17, 24, 39, 0.75);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 22px;
+    overflow: hidden;
+    backdrop-filter: blur(18px);
+    margin-bottom: 18px;
+    box-shadow: 0 12px 50px rgba(0,0,0,0.35);
+}
+
+.ticket-left {
+    position: relative;
+    border-right: 1px dashed rgba(255,255,255,0.12);
+    background: rgba(0,0,0,0.25);
+}
+
+.ticket-poster {
+    width: 100%;
+    height: 100%;
+    max-height: 320px;
+    object-fit: cover;
+    display: block;
+}
+
+.ticket-brand {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    right: 12px;
+    padding: 10px 12px;
+    border-radius: 16px;
+    background: rgba(0,0,0,0.55);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(12px);
+}
+
+.ticket-brand-title {
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.ticket-brand-sub {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.ticket-mid {
+    padding: 18px 18px 16px 18px;
+}
+
+.ticket-title {
+    font-size: 1.4rem;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 6px;
+}
+
+.ticket-meta {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    margin-bottom: 14px;
+}
+
+.ticket-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.ticket-field {
+    padding: 12px 12px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+}
+
+.ticket-label {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    margin-bottom: 6px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.ticket-value {
+    font-weight: 900;
+    font-size: 1rem;
+}
+
+.ticket-sub {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.ticket-price {
+    color: var(--primary-gold);
+    font-size: 1.1rem;
+}
+
+/* Seats pills */
+.ticket-seats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.seat-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 900;
+    background: rgba(251,191,36,0.14);
+    border: 1px solid rgba(251,191,36,0.28);
+}
+
+.seat-pill-empty {
+    opacity: 0.7;
+}
+
+/* Right stub (like real ticket) */
+.ticket-right {
+    border-left: 1px dashed rgba(255,255,255,0.12);
+    background: rgba(0,0,0,0.18);
+    padding: 14px;
+    display: flex;
+    align-items: stretch;
+}
+
+.ticket-stub {
+    width: 100%;
+    border-radius: 18px;
+    padding: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+}
+
+.stub-title {
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.9;
+    font-size: 0.85rem;
+}
+
+.stub-when {
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.stub-qr {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 14px;
+    border: 1px dashed rgba(255,255,255,0.25);
+    background:
+        linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 10px 10px;
+}
+
+.stub-small {
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+/* Hover */
+.ticket-card:hover {
+    transform: translateY(-3px);
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 18px 70px rgba(0,0,0,0.45);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .ticket-card {
+        grid-template-columns: 200px 1fr;
+        grid-template-rows: auto auto;
+    }
+
+    .ticket-right {
+        grid-column: 1 / -1;
+        border-left: none;
+        border-top: 1px dashed rgba(255,255,255,0.12);
+    }
+
+    .ticket-poster {
+        max-height: 280px;
+    }
+}
+
+@media (max-width: 576px) {
+    .ticket-card {
+        grid-template-columns: 1fr;
+    }
+
+    .ticket-left {
+        border-right: none;
+        border-bottom: 1px dashed rgba(255,255,255,0.12);
+    }
+
+    .ticket-poster {
+        max-height: 260px;
+    }
+
+    .ticket-grid {
+        grid-template-columns: 1fr;
+    }
 }
