@@ -1,188 +1,133 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profilom - Cinemax</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profilom - Cinemax</title>
 
-    <!-- Bootstrap -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet" />
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Shared styles -->
-    <link rel="stylesheet" href="css/common.css" />
-    <!-- Profile styles -->
-    <link rel="stylesheet" href="css/profile.css" />
+  <!-- Bootstrap + Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css">
+
+  <!-- Common + page CSS -->
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/profile.css" />
 </head>
-
 <body>
-<!-- Navbar -->
+
+<!-- Navbar (ugyanaz, mint a többi oldalon) -->
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="index.html">
-            <i class="bi bi-film"></i> CINEMAX
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">
+      <i class="bi bi-film"></i> CINEMAX
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Főoldal</a></li>
+        <li class="nav-item"><a class="nav-link" href="movies.html">Filmek</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">Rólunk</a></li>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-lg-center">
-                <li class="nav-item"><a class="nav-link" href="index.html">Főoldal</a></li>
-                <li class="nav-item"><a class="nav-link" href="movies.html">Filmek</a></li>
-                <li class="nav-item"><a class="nav-link" href="about.html">Rólunk</a></li>
-
-                <li class="nav-item ms-lg-3">
-                    <a href="profile.html" class="btn btn-gold">
-                        <i class="bi bi-person-circle"></i>
-                        <span id="userName">Profil</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+        <li class="nav-item ms-3">
+          <a href="login.html" class="btn btn-outline-gold" id="loginBtn">
+            <i class="bi bi-person"></i> Bejelentkezés
+          </a>
+          <a href="profile.html" class="btn btn-gold" id="userBtn" style="display:none;">
+            <i class="bi bi-person-circle"></i> <span id="userName"></span>
+          </a>
+        </li>
+      </ul>
     </div>
+  </div>
 </nav>
 
-<!-- Page -->
-<div class="profile-page">
-    <div class="container py-5">
-        <div class="profile-shell">
-            <!-- Header / identity -->
-            <div class="profile-hero">
-                <div class="profile-hero-bg"></div>
+<main class="wrap" style="padding-top: 88px;">
 
-                <div class="profile-hero-content">
-                    <div class="avatar-ring">
-                        <div class="avatar">
-                            <i class="bi bi-person-fill"></i>
-                        </div>
-                    </div>
+  <section class="profile-top">
+    <div class="profile-left">
+      <div class="avatar"><div class="avatar-inner">👤</div></div>
 
-                    <div class="who">
-                        <div class="name-row">
-                            <h1 class="profile-name" id="profileName">-</h1>
-                            <span class="tier-badge" id="tierBadge">CINEMAX</span>
-                        </div>
-
-                        <div class="profile-email" id="profileEmail">-</div>
-
-                        <div class="meta-row">
-                            <div class="meta-chip">
-                                <i class="bi bi-calendar3"></i>
-                                <span>Tagság:</span>
-                                <strong id="memberSince">-</strong>
-                            </div>
-
-                            <div class="meta-chip">
-                                <i class="bi bi-heart-fill"></i>
-                                <span>Kedvencek:</span>
-                                <strong id="favCount">0</strong>
-                            </div>
-
-                            <div class="meta-chip">
-                                <i class="bi bi-ticket-perforated"></i>
-                                <span>Foglalások:</span>
-                                <strong id="totalBookings">0</strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="profile-actions">
-                        <a class="btn btn-gold btn-lg w-100" href="bookings.html">
-                            <i class="bi bi-list-check"></i> Foglalásaim
-                        </a>
-
-                        <button class="btn btn-outline-danger w-100 mt-2" type="button" onclick="logout()">
-                            <i class="bi bi-box-arrow-right"></i> Kijelentkezés
-                        </button>
-
-                        <a class="btn btn-outline-light w-100 mt-2" href="movies.html">
-                            <i class="bi bi-search"></i> Filmek böngészése
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Content grid -->
-            <div class="profile-grid">
-                <!-- Next ticket -->
-                <div class="panel">
-                    <div class="panel-head">
-                        <div class="panel-title">
-                            <i class="bi bi-ticket-detailed"></i>
-                            Következő jegyed
-                        </div>
-                        <div class="panel-sub">Ha van közelgő foglalásod, itt egy mini mozijegy.</div>
-                    </div>
-
-                    <div id="nextTicketArea"></div>
-                </div>
-
-                <!-- Tips / perks -->
-                <div class="panel">
-                    <div class="panel-head">
-                        <div class="panel-title">
-                            <i class="bi bi-stars"></i>
-                            Cinemax extrák
-                        </div>
-                        <div class="panel-sub">Kis “élet” a profil oldalra, hogy ne legyen üres.</div>
-                    </div>
-
-                    <div class="perk-list">
-                        <div class="perk">
-                            <div class="perk-ico"><i class="bi bi-shield-check"></i></div>
-                            <div class="perk-txt">
-                                <div class="perk-name">Gyors belépés</div>
-                                <div class="perk-desc">Foglalásaid automatikusan mentődnek a böngésződben.</div>
-                            </div>
-                        </div>
-
-                        <div class="perk">
-                            <div class="perk-ico"><i class="bi bi-geo-alt"></i></div>
-                            <div class="perk-txt">
-                                <div class="perk-name">Helyed megvan</div>
-                                <div class="perk-desc">A kiválasztott székek megjelennek a mozijegyen.</div>
-                            </div>
-                        </div>
-
-                        <div class="perk">
-                            <div class="perk-ico"><i class="bi bi-lightning-charge"></i></div>
-                            <div class="perk-txt">
-                                <div class="perk-name">Gyors foglalás</div>
-                                <div class="perk-desc">Jegytípus + ülések = 10 másodperc és kész.</div>
-                            </div>
-                        </div>
-
-                        <div class="perk">
-                            <div class="perk-ico"><i class="bi bi-heart"></i></div>
-                            <div class="perk-txt">
-                                <div class="perk-name">Kedvencek</div>
-                                <div class="perk-desc">A filmek oldalon tudod jelölni ❤️ / 🤍.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    <div class="hint">
-                        <i class="bi bi-info-circle"></i>
-                        Tipp: ha a képek néha nem töltenek, futtasd Live Serverrel (localhost).
-                    </div>
-                </div>
-            </div>
+      <div class="user-meta">
+        <div class="username-row">
+          <div class="username" id="username"></div>
+          <div class="badge" id="badge">SILVER</div>
         </div>
-    </div>
-</div>
+        <div class="email" id="email"></div>
 
-<!-- Toast -->
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-k">Foglalások</div>
+            <div class="stat-v" id="bookingCount">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-k">Kedvencek</div>
+            <div class="stat-v" id="favCount">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-k">Pontok</div>
+            <div class="stat-v" id="points">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <a class="btn btn-gold" href="bookings.html">☰ Foglalásaim</a>
+      <button class="btn btn-outline" id="logoutBtn">⎋ Kijelentkezés</button>
+      <a class="btn btn-ghost" href="movies.html">🔎 Filmek böngészése</a>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">
+          <span class="card-ico">🎟️</span>
+          <div>
+            <div class="card-name">Foglalásaim</div>
+            <div class="card-sub">Nincs mini jegy — minden egyben az összes foglalásnál.</div>
+          </div>
+        </div>
+        <a class="mini-btn" href="bookings.html">Összes foglalás</a>
+      </div>
+
+      <div class="summary">
+        <div class="sum-box">
+          <div class="k">Foglalások</div>
+          <div class="v" id="sumBookings">0</div>
+        </div>
+
+        <div class="sum-box">
+          <div class="k">Következő</div>
+          <div class="v small" id="sumNext">Nincs</div>
+        </div>
+
+        <div class="sum-box">
+          <div class="k">Gyors link</div>
+          <a class="link" href="movies.html">Filmek böngészése →</a>
+        </div>
+      </div>
+
+      <div class="note">
+        Tipp: ha 2 ülést foglalsz, a foglalásoknál 2 külön jegyet kapsz (külön QR-rel).
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Toast (a common.js-hez) -->
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-body" id="toastMessage"></div>
-    </div>
+  <div id="liveToast" class="toast" role="alert">
+    <div class="toast-body" id="toastMessage"></div>
+  </div>
 </div>
 
-<!-- Scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script src="js/common.js"></script>
 <script src="js/profile.js"></script>

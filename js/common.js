@@ -64,15 +64,29 @@ const movies = [
 
 // Állapot tárolása localStorage-ban
 function getCurrentUser() {
+    // Canonical user key: currentUser
     const userStr = localStorage.getItem('currentUser');
-    return userStr ? JSON.parse(userStr) : null;
+    if (userStr) {
+        try { return JSON.parse(userStr); } catch { /* ignore */ }
+    }
+
+    // Compatibility: ha korábban más kulcsot használtál
+    const alt = localStorage.getItem('cinemax_user');
+    if (alt) {
+        try { return JSON.parse(alt); } catch { /* ignore */ }
+    }
+
+    return null;
 }
 
 function setCurrentUser(user) {
     if (user) {
         localStorage.setItem('currentUser', JSON.stringify(user));
+        // Compatibility
+        localStorage.setItem('cinemax_user', JSON.stringify(user));
     } else {
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('cinemax_user');
     }
 }
 
@@ -136,7 +150,10 @@ function updateUserInterface() {
             loginBtn.style.display = 'none';
             userBtn.style.display = 'inline-block';
             const userName = document.getElementById('userName');
-            if (userName) userName.textContent = currentUser.name.split(' ')[0];
+            if (userName) {
+                const n = (currentUser.name || currentUser.username || currentUser.email || '').trim();
+                userName.textContent = n ? n.split(' ')[0] : '';
+            }
         } else {
             loginBtn.style.display = 'inline-block';
             userBtn.style.display = 'none';
@@ -152,16 +169,44 @@ function updateUserInterface() {
 
 // Kijelentkezés
 function logout() {
+    // minden user kulcs törlése
     setCurrentUser(null);
-    updateUserInterface(); // <-- EZ A LÉNYEG: azonnal eltűnik a Foglalások is
+
+    // egyéb auth kulcsok takarítása (ha valahol használtad)
+    try {
+        localStorage.removeItem('cinemax_token');
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('token');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('loggedInUser');
+    } catch {}
+
+    // UI azonnal friss
+    updateUserInterface();
+
+    // cross-tab + back-button frissítés jelzése
+    try { localStorage.setItem('cmx_logout_broadcast', String(Date.now())); } catch {}
+
     showToast('Sikeresen kijelentkeztél!');
+    // rövid delay a toast miatt
     setTimeout(() => {
         window.location.href = 'index.html';
-    }, 1000);
+    }, 400);
 }
 
 
 // Oldal betöltésekor
 document.addEventListener('DOMContentLoaded', function() {
     updateUserInterface();
+});
+
+// FONTOS: vissza gomb (BFCache) / tab váltás / másik tab logout -> UI frissüljön
+window.addEventListener('pageshow', () => updateUserInterface());
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') updateUserInterface();
+});
+window.addEventListener('storage', (e) => {
+    if (e.key === 'currentUser' || e.key === 'cmx_logout_broadcast' || e.key === 'cinemax_user') {
+        updateUserInterface();
+    }
 });

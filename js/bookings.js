@@ -1,134 +1,188 @@
-// Bookings oldal funkciók - CINEMA TICKET VIEW
-document.addEventListener('DOMContentLoaded', function () {
-    const currentUser = getCurrentUser();
+/* =========================================================
+   CINEMAX - BOOKINGS
+   - A projekt eredeti foglalás struktúrájából dolgozik (common.js userBookings)
+   - 1 foglalás (több seat) -> több külön ticket kártya
+   - QR mindig random nonce -> minden jegy egyedi
+========================================================= */
 
-    if (!currentUser) {
-        showToast('Kérlek először jelentkezz be!', true);
-        setTimeout(() => {
-            window.location.href = 'login.html';
-        }, 1500);
-        return;
-    }
-
-    loadBookings();
-});
-
-function loadBookings() {
-    const currentUser = getCurrentUser();
-    if (!currentUser) return;
-
-    const allBookings = getUserBookings();
-    const myBookings = allBookings.filter(b => b.userId === currentUser.id);
-    const bookingsList = document.getElementById('bookingsList');
-    if (!bookingsList) return;
-
-    if (myBookings.length === 0) {
-        bookingsList.innerHTML = `
-            <div class="no-bookings">
-                <i class="bi bi-film no-bookings-icon"></i>
-                <h2>Még nincs foglalásod</h2>
-                <p class="text-muted mb-4">Válassz filmet és foglalj jegyet most!</p>
-                <a href="movies.html" class="btn btn-gold">
-                    <i class="bi bi-search"></i> Filmek böngészése
-                </a>
-            </div>
-        `;
-        return;
-    }
-
-    // legfrissebb legyen felül
-    const sorted = [...myBookings].sort((a, b) => (b.id || 0) - (a.id || 0));
-
-    const labelMap = {
-        adult: 'Felnőtt',
-        student: 'Diák',
-        child: 'Gyerek',
-        senior: 'Nyugdíjas',
-        disabled: 'Fogyatékos'
-    };
-
-    bookingsList.innerHTML = sorted.map(booking => {
-        const movie = (typeof movies !== 'undefined')
-            ? movies.find(m => m.id === booking.movieId || m.title === booking.movieTitle)
-            : null;
-
-        const poster = movie?.poster || 'https://via.placeholder.com/400x600?text=CINEMAX';
-        const meta = [
-            movie?.category ? movie.category : null,
-            movie?.duration ? movie.duration : null,
-            movie?.rating ? `⭐ ${movie.rating}` : null
-        ].filter(Boolean).join(' • ');
-
-        const types = booking.ticketTypes || {};
-        const typeText = Object.entries(types)
-            .filter(([, v]) => Number(v) > 0)
-            .map(([k, v]) => `${labelMap[k] || k}: ${v}`)
-            .join(' • ');
-
-        const totalFt = Number(booking.total || 0).toLocaleString();
-        const seatText = String(booking.seats || '').trim();
-        const seatsArr = seatText ? seatText.split(',').map(s => s.trim()).filter(Boolean) : [];
-
-        // "Row" meg "Seat" kiemelés (ha pl. A5, B10)
-        const seatPills = seatsArr.length
-            ? seatsArr.map(s => `<span class="seat-pill">${s}</span>`).join('')
-            : `<span class="seat-pill seat-pill-empty">-</span>`;
-
-        const whenText = `${booking.date} • ${booking.time}`;
-
-        return `
-            <div class="ticket-card">
-                <div class="ticket-left">
-                    <img class="ticket-poster" src="${poster}" alt="${booking.movieTitle}">
-                    <div class="ticket-brand">
-                        <div class="ticket-brand-title"><i class="bi bi-film"></i> CINEMAX</div>
-                        <div class="ticket-brand-sub">Digital Ticket</div>
-                    </div>
-                </div>
-
-                <div class="ticket-mid">
-                    <div class="ticket-title">${booking.movieTitle}</div>
-                    <div class="ticket-meta">${meta || 'Mozijegy foglalás'}</div>
-
-                    <div class="ticket-grid">
-                        <div class="ticket-field">
-                            <div class="ticket-label"><i class="bi bi-calendar3"></i> Mikor</div>
-                            <div class="ticket-value">${whenText}</div>
-                        </div>
-
-                        <div class="ticket-field">
-                            <div class="ticket-label"><i class="bi bi-ticket-perforated"></i> Jegyek</div>
-                            <div class="ticket-value">${booking.tickets} db</div>
-                            ${typeText ? `<div class="ticket-sub">${typeText}</div>` : ``}
-                        </div>
-
-                        <div class="ticket-field">
-                            <div class="ticket-label"><i class="bi bi-pin-map"></i> Ülések</div>
-                            <div class="ticket-seats">${seatPills}</div>
-                        </div>
-
-                        <div class="ticket-field">
-                            <div class="ticket-label"><i class="bi bi-cash-coin"></i> Összeg</div>
-                            <div class="ticket-value ticket-price">${totalFt} Ft</div>
-                            <div class="ticket-sub">Kapunyitás: 30 perccel előtte</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="ticket-right">
-                    <div class="ticket-stub">
-                        <div class="stub-title">BELÉPŐ</div>
-                        <div class="stub-when">${booking.date}<br>${booking.time}</div>
-
-                        <div class="stub-qr" aria-label="QR kód helye"></div>
-
-                        <div class="stub-small">
-                            Ref: <strong>${String(booking.id || '').slice(-8) || '—'}</strong><br>
-                            Mutasd fel belépésnél
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
+function randomHex(bytes = 12) {
+  const arr = new Uint8Array(bytes);
+  crypto.getRandomValues(arr);
+  return [...arr].map(b => b.toString(16).padStart(2, '0')).join('');
 }
+
+function randomRef8() {
+  return Math.floor(10000000 + Math.random() * 90000000);
+}
+
+function formatDateTime(dateStr, timeStr) {
+  if (!dateStr) return '';
+  return `${dateStr} • ${timeStr || ''}`.trim();
+}
+
+function parseSeats(seatsStr) {
+  return String(seatsStr || '')
+    .split(',')
+    .map(s => s.trim().toUpperCase())
+    .filter(Boolean);
+}
+
+function makeQrPayload(ticket) {
+  return JSON.stringify({
+    v: 1,
+    ticketId: ticket.ticketId,
+    bookingId: ticket.bookingId,
+    userId: ticket.userId,
+    movieId: ticket.movieId,
+    movieTitle: ticket.movieTitle,
+    date: ticket.date,
+    time: ticket.time,
+    seat: ticket.seat,
+    ref: ticket.ref,
+    nonce: ticket.nonce
+  });
+}
+
+function renderQrInto(el, qrData) {
+  el.innerHTML = '';
+  // QRCode lib a bookings.html-ben van betöltve
+  new QRCode(el, {
+    text: qrData,
+    width: 140,
+    height: 140,
+    correctLevel: QRCode.CorrectLevel.M
+  });
+}
+
+function getMovieMeta(movieId) {
+  // a common.js-ben van a movies tömb
+  try {
+    if (typeof movies !== 'undefined' && Array.isArray(movies)) {
+      return movies.find(m => String(m.id) === String(movieId)) || null;
+    }
+  } catch {}
+  return null;
+}
+
+function ticketCardHTML(t) {
+  const meta = getMovieMeta(t.movieId);
+  const poster = meta?.poster || '';
+  const genre = meta?.category || '';
+  const duration = meta?.duration || '';
+  const rating = (meta?.rating != null) ? meta.rating : '';
+  const sub = [genre, duration, rating ? `⭐ ${rating}` : ''].filter(Boolean).join(' • ');
+
+  return `
+    <div class="ticket">
+      <div class="left">
+        <img class="poster" src="${poster}" alt="${t.movieTitle}">
+        <div class="left-meta">
+          <div>
+            <div class="title">${t.movieTitle}</div>
+            <div class="sub">${sub}</div>
+          </div>
+          <div class="brand-badge">
+            <div>
+              <div class="badge-top">CINEMAX</div>
+              <div class="badge-sub">Digital Ticket</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mid">
+        <div class="box">
+          <div class="label"><i class="bi bi-calendar-event"></i> Mikor</div>
+          <div class="value">${formatDateTime(t.date, t.time)}</div>
+        </div>
+        <div class="box">
+          <div class="label"><i class="bi bi-grid-3x3-gap"></i> Ülés</div>
+          <div class="seat-pill">${t.seat}</div>
+        </div>
+        <div class="box">
+          <div class="label"><i class="bi bi-ticket-perforated"></i> Jegy</div>
+          <div class="value">1 db</div>
+          <div class="sub">Külön belépő</div>
+        </div>
+        <div class="box">
+          <div class="label"><i class="bi bi-cash-coin"></i> Összeg</div>
+          <div class="value price">${t.totalFt} Ft</div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="entry">BELÉPŐ</div>
+        <div class="entry-when">${formatDateTime(t.date, t.time)}</div>
+
+        <div class="qr-wrap">
+          <div class="qr-box" id="qr_${t.ticketId}"></div>
+        </div>
+
+        <div class="ref">Ref. ${t.ref}</div>
+        <div class="hint">Mutasd fel belépésnél</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderBookings() {
+  if (typeof updateUserInterface === 'function') updateUserInterface();
+
+  const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  const all = (typeof getUserBookings === 'function') ? getUserBookings() : [];
+  const my = (all || []).filter(b => b.userId === user.id);
+
+  const listEl = document.getElementById('bookingsList');
+  const emptyEl = document.getElementById('emptyState');
+  if (!listEl) return;
+
+  if (!my.length) {
+    listEl.innerHTML = '';
+    if (emptyEl) emptyEl.style.display = '';
+    return;
+  }
+
+  if (emptyEl) emptyEl.style.display = 'none';
+
+  // Ticket per seat
+  const tickets = [];
+  my
+    .slice()
+    .sort((a, b) => (String(b.date) + String(b.time)).localeCompare(String(a.date) + String(a.time)))
+    .forEach(b => {
+      const seats = parseSeats(b.seats);
+      seats.forEach(seat => {
+        tickets.push({
+          ticketId: `${b.id}_${seat}_${randomHex(4)}`,
+          bookingId: b.id,
+          userId: b.userId,
+          movieId: b.movieId,
+          movieTitle: b.movieTitle,
+          date: b.date,
+          time: b.time,
+          seat,
+          // b.total: foglalás összár. ülésenként elosztjuk, hogy legyen értelme a ticketen.
+          totalFt: Math.round((Number(b.total) || 0) / Math.max(1, seats.length)),
+          ref: randomRef8(),
+          nonce: randomHex(12)
+        });
+      });
+    });
+
+  listEl.innerHTML = tickets.map(ticketCardHTML).join('');
+
+  // QR render
+  tickets.forEach(t => {
+    const el = document.getElementById(`qr_${t.ticketId}`);
+    if (!el) return;
+    renderQrInto(el, makeQrPayload(t));
+  });
+}
+
+document.addEventListener('DOMContentLoaded', renderBookings);
+window.addEventListener('pageshow', renderBookings);
