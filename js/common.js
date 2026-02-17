@@ -81,9 +81,11 @@ function getCurrentUser() {
 
 function setCurrentUser(user) {
     if (user) {
-        localStorage.setItem('currentUser', JSON.stringify(user));
+        // Ne tároljuk a jelszót a sessionben
+        const { password, ...safeUser } = user;
+        localStorage.setItem('currentUser', JSON.stringify(safeUser));
         // Compatibility
-        localStorage.setItem('cinemax_user', JSON.stringify(user));
+        localStorage.setItem('cinemax_user', JSON.stringify(safeUser));
     } else {
         localStorage.removeItem('currentUser');
         localStorage.removeItem('cinemax_user');

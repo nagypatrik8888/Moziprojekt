@@ -1,0 +1,17 @@
+.fw-black{ font-weight: 900 !important; }
+.statline{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+.statline span{ color: rgba(255,255,255,0.72); font-weight: 800; }
+.statline b{ color: var(--gold2); font-weight: 900; }
+
+.table-dark{
+  --bs-table-bg: rgba(0,0,0,0.20);
+  --bs-table-border-color: rgba(255,255,255,0.10);
+}

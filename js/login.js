@@ -122,7 +122,12 @@ loginForm.addEventListener('submit', e => {
         return;
     }
 
-    setCurrentUser(found);
+    
+    // Admin flag (demo)
+    if ((found.email || "").toLowerCase().trim() === "admin@cinema.hu") {
+        found.isAdmin = true;
+    }
+setCurrentUser(found);
     showToast('Sikeres bejelentkezés!');
     setTimeout(() => location.href = 'index.html', 800);
 });
