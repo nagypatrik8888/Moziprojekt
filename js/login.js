@@ -112,6 +112,26 @@ registerForm.addEventListener('submit', e => {
 loginForm.addEventListener('submit', e => {
     e.preventDefault();
 
+
+    // ADMIN LOGIN (nem kell regisztráció):
+    // Email: admin@cinema.hu
+    // Jelszó: admin123 (elfogadja: "admin 123" is)
+    const adminEmail = (loginEmail.value || '').trim().toLowerCase();
+    const adminPwdNorm = (loginPassword.value || '').trim().toLowerCase().replace(/\s+/g, '');
+    if (adminEmail === 'admin@cinema.hu' && adminPwdNorm === 'admin123') {
+        const adminUser = {
+            id: 'admin',
+            name: 'Admin',
+            email: 'admin@cinema.hu',
+            bookings: 0,
+            points: 0,
+            isAdmin: true
+        };
+        setCurrentUser(adminUser);
+        showToast('Sikeres admin bejelentkezés!');
+        setTimeout(() => location.href = 'admin.html', 400);
+        return;
+    }
     const users = JSON.parse(localStorage.getItem('users') || '[]');
     const found = users.find(
         u => u.email === loginEmail.value && u.password === loginPassword.value

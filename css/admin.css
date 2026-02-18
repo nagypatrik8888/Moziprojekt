@@ -8,10 +8,50 @@
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.10);
 }
-.statline span{ color: rgba(255,255,255,0.72); font-weight: 800; }
+.statline span{ color: rgba(255,255,255,0.95); font-weight: 800; }
 .statline b{ color: var(--gold2); font-weight: 900; }
 
 .table-dark{
   --bs-table-bg: rgba(0,0,0,0.20);
   --bs-table-border-color: rgba(255,255,255,0.10);
+}
+/* ===== FORCE WHITE TEXT ON ADMIN PAGE ===== */
+
+body {
+    color: #ffffff !important;
+}
+
+.admin-container,
+.admin-container * {
+    color: #ffffff !important;
+}
+
+h1, h2, h3, h4, h5, h6,
+p, span, label, small,
+th, td,
+li,
+a {
+    color: #ffffff !important;
+}
+
+button {
+    color: #ffffff !important;
+}
+
+input, select, textarea {
+    color: #ffffff !important;
+}
+
+table {
+    color: #ffffff !important;
+}
+
+/* Kijelentkezés gomb */
+.logout-btn {
+    color: #ffffff !important;
+}
+
+/* Törlés gomb */
+.delete-btn {
+    color: #ffffff !important;
 }
