@@ -14,19 +14,20 @@ class MovieController extends Controller //extends
     //
     public function index()
     {
-        $movies = Movie::with('genre')->with('screening')->get(); //with szerepe
-        $prices = Price::all();
+        $movies = Movie::with('genre')->with('screening')->get(); //lekeri adatbazisbol a movie-kat a genre-ákkal és a screening-ekkel egyutt
+
+        $prices = Price::all(); //lekerjuk adatbazisbol az osszes price tablaban levo osszes adatot
         $genres = Genre::all();
 
-        $response = [
+        $response = [           //letrehozunk egy response valtozot es abban indexeket pl movies aminek az erteke ures tomb lesz
             'movies' => [],
             'genres' => [],
             'prices' => [],
         ];
 
-        foreach ($movies as $movie) //movies as??? movie
+        foreach ($movies as $movie) //foreach ciklusban minden egyes filmen egyenkent vegigmegy
         {
-            $movieData = [
+            $movie_data_for_frontend = [ //letrehozunk egy tombot azokkal az adatokkal amiketr a frontendnek vissza szretnenk kuldeni
                 'title' => $movie->title,
                 'genre_name' => $movie->genre->name,
                 'release_date' =>$movie->release_date,
@@ -40,15 +41,17 @@ class MovieController extends Controller //extends
             echo $movie->genre->name . ' - ' . "\n";
             echo $movie->duration_min . ' - ' . "\n";
 
-            foreach ($movie->screening as $screening) {
+            foreach ($movie->screening as $screening) { //egyszerre egy moviehoz tartozo screeningjein megyunk vegig
                 echo $screening->start_time . "\t";
             }
           
-            $response['movies'][] = $movieData;
+        
+            $response['movies'][] = $movie_data_for_frontend; //response valtozon belul a movies indexhez adunk hozza egy elemet 
         }
 
-        foreach ($prices as $price) {
-            echo $price->type . ' - ' .$price->price. ' - ' . "\n";
+
+        foreach ($prices as $price) { //soronkent vizsgaljuk a prices tabla elemeit
+           echo $price->type . ' - ' .$price->price. ' - ' . "\n";
 
             $priceData=[
                 'price'=>$price->price,
@@ -71,7 +74,7 @@ class MovieController extends Controller //extends
 
 
 
-        //dd($movies,$prices,$genres,$response);
-        return response()->json($response);
+        dd($movies,$prices,$genres,$response);
+        return response()->json($response); //json valasz kuldese a frontendnek
     }
 }
