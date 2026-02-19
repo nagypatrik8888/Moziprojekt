@@ -60,10 +60,3 @@ Környezet: phpMyAdmin SQL export
 - `ticket_order_seats.screening_id` → `screening.id`
 
 ---
-
-## Telepítés / import
-
-### 1) Adatbázis létrehozása
-
-```sql
-CREATE DATABASE webshop CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
