@@ -72,7 +72,67 @@ class MovieController extends Controller //extends
 
     public function show(int $movie_id) { //itt kapjuk meg a routeban definialt parametert ami az urlbol jon
 
-        $movie_row=Movie::where('id', $movie_id)->first(); //adatbazisbol lekerjuk id szerint a kapott parameterhez tartozo moviet
+        $movie_row=Movie::where('id', $movie_id)->with('screening')->with('genre')->first(); //adatbazisbol lekerjuk id szerint a kapott parameterhez tartozo moviet
+        $price_rows = Price::all(); //lekerjuk adatbazisbol az osszes price tablaban levo osszes adatot
+        $genre_rows = Genre::all();
+
+        $response_for_frontend = [           //letrehozunk egy response valtozot es abban indexeket pl movie_rows aminek az erteke ures tomb lesz
+            'movie' => [],
+            'genres' => [],
+            'prices' => [],
+        ];
+
+       
+            $movie_data_for_frontend = [ //letrehozunk egy tombot azokkal az adatokkal amiketr a frontendnek vissza szretnenk kuldeni
+                'title' => $movie_row->title,
+                'genre_name' => $movie_row->genre->name,
+                'release_date' =>$movie_row->release_date,
+                'rating' =>$movie_row->rating,
+                'duration' => $movie_row ->duration_min,
+                'description' => $movie_row ->description,
+                'screenings' => [],
+
+            ];
+
+
+            foreach ($movie_row->screening as $screening) { //egyszerre egy moviehoz tartozo screeningjein megyunk vegig
+
+                $screening_data_for_frontend=[
+                'start_time'=>$screening->start_time,
+                ];
+                 $movie_data_for_frontend['screenings'][] = $screening_data_for_frontend;
+
+            }
+          
+        
+            $response_for_frontend['movie'] = $movie_data_for_frontend; //a response változó movie indexének adunk értéket
+        
+
+
+        foreach ($price_rows as $price) { //soronkent vizsgaljuk a price_rows tabla elemeit
+
+            $price_data_for_frontend=[
+                'price'=>$price->price,
+                'price_type'=>$price->type,
+            ];
+
+            $response_for_frontend['prices'][] = $price_data_for_frontend;
+        }
+
+        foreach ($genre_rows as $genre) {
+
+            $genre_data_for_frontend=[
+                'genre_name'=>$genre->name,
+            ];
+
+            $response_for_frontend['genres'][] = $genre_data_for_frontend;
+        }
+
+
+
+        //dd($movie_rows,$price_rows,$genre_rows,$response);
+        return response()->json($response_for_frontend); //json valasz kuldese a frontendnek
         dd($movie_id, $movie_row);
+
     }
 }
