@@ -14,18 +14,18 @@ class MovieController extends Controller //extends
     //
     public function index()
     {
-        $movies = Movie::with('genre')->with('screening')->get(); //lekeri adatbazisbol a movie-kat a genre-ákkal és a screening-ekkel egyutt
+        $movie_rows = Movie::with('genre')->with('screening')->get(); //lekeri adatbazisbol a movie-kat a genre-ákkal és a screening-ekkel egyutt
 
-        $prices = Price::all(); //lekerjuk adatbazisbol az osszes price tablaban levo osszes adatot
-        $genres = Genre::all();
+        $price_rows = Price::all(); //lekerjuk adatbazisbol az osszes price tablaban levo osszes adatot
+        $genre_rows = Genre::all();
 
-        $response = [           //letrehozunk egy response valtozot es abban indexeket pl movies aminek az erteke ures tomb lesz
+        $response_for_frontend = [           //letrehozunk egy response valtozot es abban indexeket pl movie_rows aminek az erteke ures tomb lesz
             'movies' => [],
             'genres' => [],
             'prices' => [],
         ];
 
-        foreach ($movies as $movie) //foreach ciklusban minden egyes filmen egyenkent vegigmegy
+        foreach ($movie_rows as $movie) //foreach ciklusban minden egyes filmen egyenkent vegigmegy
         {
             $movie_data_for_frontend = [ //letrehozunk egy tombot azokkal az adatokkal amiketr a frontendnek vissza szretnenk kuldeni
                 'title' => $movie->title,
@@ -42,32 +42,32 @@ class MovieController extends Controller //extends
             }
           
         
-            $response['movies'][] = $movie_data_for_frontend; //response valtozon belul a movies indexhez adunk hozza egy elemet 
+            $response_for_frontend['movies'][] = $movie_data_for_frontend; //response valtozon belul a movie_rows indexhez adunk hozza egy elemet 
         }
 
 
-        foreach ($prices as $price) { //soronkent vizsgaljuk a prices tabla elemeit
+        foreach ($price_rows as $price) { //soronkent vizsgaljuk a price_rows tabla elemeit
 
-            $priceData=[
+            $price_data_for_frontend=[
                 'price'=>$price->price,
                 'price_type'=>$price->type,
             ];
 
-            $response['prices'][] = $priceData;
+            $response_for_frontend['prices'][] = $price_data_for_frontend;
         }
 
-        foreach ($genres as $genre) {
+        foreach ($genre_rows as $genre) {
 
-            $genreData=[
+            $genre_data_for_frontend=[
                 'genre_name'=>$genre->name,
             ];
 
-            $response['genres'][] = $genreData;
+            $response_for_frontend['genres'][] = $genre_data_for_frontend;
         }
 
 
 
-        dd($movies,$prices,$genres,$response);
-        return response()->json($response); //json valasz kuldese a frontendnek
+        //dd($movie_rows,$price_rows,$genre_rows,$response);
+        return response()->json($response_for_frontend); //json valasz kuldese a frontendnek
     }
 }
