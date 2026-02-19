@@ -37,12 +37,8 @@ class MovieController extends Controller //extends
 
             ];
 
-            echo $movie->title . ' - ' . $movie->release_date . " - " .  "\n";
-            echo $movie->genre->name . ' - ' . "\n";
-            echo $movie->duration_min . ' - ' . "\n";
 
             foreach ($movie->screening as $screening) { //egyszerre egy moviehoz tartozo screeningjein megyunk vegig
-                echo $screening->start_time . "\t";
             }
           
         
@@ -51,7 +47,6 @@ class MovieController extends Controller //extends
 
 
         foreach ($prices as $price) { //soronkent vizsgaljuk a prices tabla elemeit
-           echo $price->type . ' - ' .$price->price. ' - ' . "\n";
 
             $priceData=[
                 'price'=>$price->price,
@@ -66,8 +61,6 @@ class MovieController extends Controller //extends
             $genreData=[
                 'genre_name'=>$genre->name,
             ];
-
-           echo $genre->name . ' - ' . "\n";
 
             $response['genres'][] = $genreData;
         }
