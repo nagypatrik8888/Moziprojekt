@@ -70,4 +70,10 @@ class MovieController extends Controller //extends
         //dd($movie_rows,$price_rows,$genre_rows,$response);
         return response()->json($response_for_frontend); //json valasz kuldese a frontendnek
     }
+
+    public function show(int $movie_id) { //itt kapjuk meg a routeban definialt parametert ami az urlbol jon
+
+        $movie_row=Movie::where('id', $movie_id)->first(); //adatbazisbol lekerjuk id szerint a kapott parameterhez tartozo moviet
+        dd($movie_id, $movie_row);
+    }
 }
