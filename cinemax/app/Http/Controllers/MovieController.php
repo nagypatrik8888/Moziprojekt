@@ -14,15 +14,14 @@ class MovieController extends Controller //extends
     //
     public function index()
     {
-        $movie_rows = Movie::with('genre')->with('screening')->get(); //lekeri adatbazisbol a movie-kat a genre-ákkal és a screening-ekkel egyutt
-
-        $price_rows = Price::all(); //lekerjuk adatbazisbol az osszes price tablaban levo osszes adatot
+        $movie_rows = Movie::with('genre')->get(); //lekeri adatbazisbol a movie-kat a genre-ákkal és a screening-ekkel egyutt
+        //$price_rows = Price::all(); //lekerjuk adatbazisbol az osszes price tablaban levo osszes adatot
         $genre_rows = Genre::all();
 
         $response_for_frontend = [           //letrehozunk egy response valtozot es abban indexeket pl movie_rows aminek az erteke ures tomb lesz
             'movies' => [],
             'genres' => [],
-            'prices' => [],
+            //'prices' => [],
         ];
 
         foreach ($movie_rows as $movie) //foreach ciklusban minden egyes filmen egyenkent vegigmegy
@@ -38,14 +37,14 @@ class MovieController extends Controller //extends
             ];
 
 
-            foreach ($movie->screening as $screening) { //egyszerre egy moviehoz tartozo screeningjein megyunk vegig
-            }
+            /*foreach ($movie->screening as $screening) { //egyszerre egy moviehoz tartozo screeningjein megyunk vegig
+            }*/
           
         
             $response_for_frontend['movies'][] = $movie_data_for_frontend; //response valtozon belul a movie_rows indexhez adunk hozza egy elemet 
         }
 
-
+/*
         foreach ($price_rows as $price) { //soronkent vizsgaljuk a price_rows tabla elemeit
 
             $price_data_for_frontend=[
@@ -55,7 +54,7 @@ class MovieController extends Controller //extends
 
             $response_for_frontend['prices'][] = $price_data_for_frontend;
         }
-
+*/
         foreach ($genre_rows as $genre) {
 
             $genre_data_for_frontend=[
