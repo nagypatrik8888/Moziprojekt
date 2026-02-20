@@ -41,7 +41,7 @@ class MovieController extends Controller //extends
             }*/
           
         
-            $response_for_frontend['movies'][] = $movie_data_for_frontend; //response valtozon belul a movie_rows indexhez adunk hozza egy elemet 
+            $response_for_frontend['movies'][] = $movie_data_for_frontend; //response valtozon belul a movies indexhez adunk hozza egy elemet 
         }
 
 /*
@@ -72,13 +72,11 @@ class MovieController extends Controller //extends
 
     public function show(int $movie_id) { //itt kapjuk meg a routeban definialt parametert ami az urlbol jon
 
-        $movie_row=Movie::where('id', $movie_id)->with('screening')->with('genre')->first(); //adatbazisbol lekerjuk id szerint a kapott parameterhez tartozo moviet
+        $movie_row = Movie::where('id', $movie_id)->with('screenings')->with('genre')->first(); //adatbazisbol lekerjuk id szerint a kapott parameterhez tartozo moviet
         $price_rows = Price::all(); //lekerjuk adatbazisbol az osszes price tablaban levo osszes adatot
-        $genre_rows = Genre::all();
 
         $response_for_frontend = [           //letrehozunk egy response valtozot es abban indexeket pl movie_rows aminek az erteke ures tomb lesz
             'movie' => [],
-            'genres' => [],
             'prices' => [],
         ];
 
@@ -95,11 +93,34 @@ class MovieController extends Controller //extends
             ];
 
 
-            foreach ($movie_row->screening as $screening) { //egyszerre egy moviehoz tartozo screeningjein megyunk vegig
+            foreach ($movie_row->screenings as $screening) { //egyszerre egy moviehoz tartozo screeningjein megyunk vegig
 
                 $screening_data_for_frontend=[
-                'start_time'=>$screening->start_time,
+                    'start_time'=>$screening->start_time,
+                    'start_date'=>$screening->screening_date,
+                    'room'=>[],
+                    
+                    //székeket átadni 
+                    //Melyik szobábában van a vetítés, és ott milyen székek vannak
                 ];
+
+                $room_data_for_frontend = [
+                    'screen_size' => $screening->room->screen_size,
+                    'seats'=>[],
+                ];
+
+                foreach ($screening->room->seats as $seat){
+                    $seat_data_for_frontend=[
+                        'row' => $seat->row_num,
+                        'column' => $seat->column_num,
+                    ];
+                    
+                    $room_data_for_frontend['seats'][]=$seat_data_for_frontend;
+
+                }
+
+                $screening_data_for_frontend['room'] = $room_data_for_frontend;
+
                  $movie_data_for_frontend['screenings'][] = $screening_data_for_frontend;
 
             }
@@ -118,17 +139,6 @@ class MovieController extends Controller //extends
 
             $response_for_frontend['prices'][] = $price_data_for_frontend;
         }
-
-        foreach ($genre_rows as $genre) {
-
-            $genre_data_for_frontend=[
-                'genre_name'=>$genre->name,
-            ];
-
-            $response_for_frontend['genres'][] = $genre_data_for_frontend;
-        }
-
-
 
         //dd($movie_rows,$price_rows,$genre_rows,$response);
         return response()->json($response_for_frontend); //json valasz kuldese a frontendnek

@@ -40,7 +40,7 @@ class Movie extends Model
     /**
      * Get the genre associated with the user.
      */
-    public function screening()
+    public function screenings()
     {
         return $this->hasMany(Screening::class,'film_id','id');
     }

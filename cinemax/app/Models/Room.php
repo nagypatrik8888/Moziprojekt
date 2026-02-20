@@ -27,6 +27,8 @@ class Room extends Model
      */
     public $timestamps = false;
 
-
+    public function Seats(){
+        return $this->hasMany(Seat::class,'room_id','id');
+    }
 
 }

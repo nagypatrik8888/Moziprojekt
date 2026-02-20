@@ -3,17 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Room;
-use App\Models\Movie;
 
-class Screening extends Model
+class Seat extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'screening'; //protected
+    protected $table = 'seats';
 
     /**
      * The primary key associated with the table.
@@ -29,19 +27,6 @@ class Screening extends Model
      */
     public $timestamps = false;
 
-    /**
-     * Get the genre associated with the user.
-     */
-    public function film()
-    {
-        return $this->hasOne(Movie::class,'id','film_id'); //hasone
-    }
 
-    public function room()
-    {
-        return $this->hasOne(Room::class,'id','room_id');
-    }
 
-    
 }
-
