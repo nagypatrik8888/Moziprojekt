@@ -72,7 +72,7 @@ class MovieController extends Controller //extends
 
     public function show(int $movie_id) { //itt kapjuk meg a routeban definialt parametert ami az urlbol jon
 
-        $movie_row = Movie::where('id', $movie_id)->with('screenings')->with('genre')->first(); //adatbazisbol lekerjuk id szerint a kapott parameterhez tartozo moviet
+        $movie_row = Movie::where('id', $movie_id)->with('future_screenings')->with('genre')->first(); //adatbazisbol lekerjuk id szerint a kapott parameterhez tartozo moviet
         $price_rows = Price::all(); //lekerjuk adatbazisbol az osszes price tablaban levo osszes adatot
 
         $response_for_frontend = [           //letrehozunk egy response valtozot es abban indexeket pl movie_rows aminek az erteke ures tomb lesz
@@ -93,7 +93,7 @@ class MovieController extends Controller //extends
             ];
 
 
-            foreach ($movie_row->screenings as $screening) { //egyszerre egy moviehoz tartozo screeningjein megyunk vegig
+            foreach ($movie_row->future_screenings as $screening) { //egyszerre egy moviehoz tartozo screeningjein megyunk vegig
 
                 $screening_data_for_frontend=[
                     'start_time'=>$screening->start_time,
@@ -134,6 +134,7 @@ class MovieController extends Controller //extends
 
             $price_data_for_frontend=[
                 'price'=>$price->price,
+                'price_id'=>$price->id,
                 'price_type'=>$price->type,
             ];
 
