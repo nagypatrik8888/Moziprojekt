@@ -28,6 +28,7 @@ class MovieController extends Controller //extends
         {
             $movie_data_for_frontend = [ //letrehozunk egy tombot azokkal az adatokkal amiketr a frontendnek vissza szretnenk kuldeni
                 'title' => $movie->title,
+                'movie_id'=> $movie->id,
                 'genre_name' => $movie->genre->name,
                 'release_date' =>$movie->release_date,
                 'rating' =>$movie->rating,
@@ -83,6 +84,7 @@ class MovieController extends Controller //extends
        
             $movie_data_for_frontend = [ //letrehozunk egy tombot azokkal az adatokkal amiketr a frontendnek vissza szretnenk kuldeni
                 'title' => $movie_row->title,
+                'movie_id'=> $movie_row->id,
                 'genre_name' => $movie_row->genre->name,
                 'release_date' =>$movie_row->release_date,
                 'rating' =>$movie_row->rating,
@@ -96,9 +98,11 @@ class MovieController extends Controller //extends
             foreach ($movie_row->future_screenings as $screening) { //egyszerre egy moviehoz tartozo screeningjein megyunk vegig
 
                 $screening_data_for_frontend=[
+                    'screening_id'=>$screening->id,
                     'start_time'=>$screening->start_time,
                     'start_date'=>$screening->screening_date,
                     'room'=>[],
+                    
                     
                     //székeket átadni 
                     //Melyik szobábában van a vetítés, és ott milyen székek vannak
@@ -111,6 +115,7 @@ class MovieController extends Controller //extends
 
                 foreach ($screening->room->seats as $seat){
                     $seat_data_for_frontend=[
+                        'seat_id' => $seat->id,
                         'row' => $seat->row_num,
                         'column' => $seat->column_num,
                     ];
