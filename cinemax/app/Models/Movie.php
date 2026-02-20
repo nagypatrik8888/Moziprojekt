@@ -44,4 +44,9 @@ class Movie extends Model
     {
         return $this->hasMany(Screening::class,'film_id','id');
     }
+
+    public function future_screenings(){
+        $from = date("Y-m-d");
+        return $this->screenings()->where('screening_date', '>=' ,$from);
+    }
 }
