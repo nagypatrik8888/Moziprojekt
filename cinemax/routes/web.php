@@ -10,6 +10,7 @@ Route::get('/', function () {
 
 
 Route::get('/movies', [MovieController::class, 'index']);
+Route::get('/movies/{movie_id}', [MovieController::class, 'show']); //letrehoztunk egy routeot ami fogad egy parametert, hogy a route celja hogy egy film adatait megjelenitsuk
 
 
 
