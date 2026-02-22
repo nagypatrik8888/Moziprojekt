@@ -33,8 +33,6 @@ class ProfileTicketOrdersController extends Controller
         }
 
 
-        dd($response_for_frontend);
-
         return response()->json($response_for_frontend);
     }
 }
