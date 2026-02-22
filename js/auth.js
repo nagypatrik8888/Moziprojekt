@@ -57,15 +57,6 @@ function cmxSetNavbar() {
     linkEl.href = user ? "profile.html" : "login.html";
   }
 
-  
-  // Admin menüpont (ha van a navbarban)
-  const adminItem = document.getElementById("navAdminItem");
-  if (adminItem) {
-    const email = String((user && user.email) || "").toLowerCase().trim();
-    const isAdmin = (user && user.isAdmin === true) || email === "admin@cinema.hu" || email === "admin@cinemax.hu";
-    adminItem.style.display = isAdmin ? "" : "none";
-  }
-
   // Logout gombok elrejtése, ha nincs user
   document.querySelectorAll("[data-cmx-logout]").forEach(btn => {
     btn.style.display = user ? "" : "none";
