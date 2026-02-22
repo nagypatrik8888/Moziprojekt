@@ -11,6 +11,12 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withMiddleware(function (Middleware $middleware): void { //ideiglenes postman test miatt
+        $middleware->validateCsrfTokens(except: [
+            'register',
+            'login'
+        ]);
+    })
     ->withMiddleware(function (Middleware $middleware): void {
         //
     })
