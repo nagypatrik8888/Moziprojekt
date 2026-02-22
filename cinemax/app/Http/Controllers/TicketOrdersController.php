@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Screening;
+use App\Models\Seat;
+use App\Models\Price;
 use App\Models\TicketOrder;
 use App\Models\TicketOrderSeat;
 use Illuminate\Http\Request;
@@ -28,6 +31,7 @@ class TicketOrdersController extends Controller
         foreach ($order_rows as $ticket_order) {
 
             $ticket_data_for_frontend = [
+                'ticket_order_id' => $ticket_order->id,
                 'screening_id' => $ticket_order->screening_id,
                 'total_price' => $ticket_order->total_price,
                 'user_id' => $ticket_order->user_id,
@@ -69,8 +73,37 @@ class TicketOrdersController extends Controller
         }
 
         $validated = $validator->valid();
+        $screening_row = Screening::where('id','=',$validated['screening_id'])->first();
+        if(!$screening_row){ //Ha nincs ilyen screening akkor hibát jelzünk 
+            return response()->json(['errors'=> ['Screening was not found!']]);
+        }
 
-        $total_price = 1600; //ki kell számolni
+        $total_price = 0; //ki kell számolni
+        $erros = [];
+        foreach($validated['seats'] as $seat) {
+            $seat_row = Seat::where('id','=',$seat['seat_id'])->first();
+            $price_row = Price::where('id','=',$seat['price_id'])->first();
+            if(!$seat_row){
+                $erros[] = 'Seat was not found: ' . $seat['seat_id'];
+            }
+            if(!$price_row){
+                $erros[] = 'Price was not found: ' . $seat['price_id'];
+            }
+
+            if(!$seat_row || !$price_row){
+                continue;
+            }
+
+            $total_price = $total_price + $price_row->price;
+            
+        }
+
+        if(!empty($erros)){
+            return response()->json(['errors'=> $erros]);
+        }
+
+        //dd($total_price,$validated,$screening_row);
+
 
         $ticket_order_row = TicketOrder::create([
             'user_id' => 12, //ezt ki kell cserélni majd bejelentkezett felhasználó id-ra 
