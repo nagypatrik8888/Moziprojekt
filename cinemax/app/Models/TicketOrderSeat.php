@@ -7,10 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 class TicketOrderSeat extends Model
 {
     //
-        protected $table = 'ticket_order_seats';
+    protected $table = 'ticket_order_seats';
 
-        public function seat() {
-            return $this->hasOne(Seat::class,'id','seat_id');
-        }
+    
+    protected $fillable = [
+        'seat_id',
+        'screening_id',
+        'ticket_order_id',
+    ];
 
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+
+    public function seat()
+    {
+        return $this->hasOne(Seat::class, 'id', 'seat_id');
+    }
 }

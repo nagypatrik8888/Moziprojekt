@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TicketOrder;
+use App\Models\TicketOrderSeat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -58,7 +59,6 @@ class TicketOrdersController extends Controller
         $response_for_frontend = [];
 
         $validator = Validator::make($request->all(), [
-            'movie_id' => 'required|integer',
             'screening_id' => 'required|integer',
             'seats.*.seat_id' => 'required|integer',
             'seats.*.price_id' => 'required|integer',
@@ -70,6 +70,32 @@ class TicketOrdersController extends Controller
 
         $validated = $validator->valid();
 
-        return response()->json($validated);
+        $total_price = 1600; //ki kell számolni
+
+        $ticket_order_row = TicketOrder::create([
+            'user_id' => 12, //ezt ki kell cserélni majd bejelentkezett felhasználó id-ra 
+            'ticket_id' => 9, //ezt az oszlopot db-ből ki kell törölni
+            'quantity' => 1, //ezt az oszlopot db-ből ki kell törölni
+            'seat_id' => null,//ezt az oszlopot db-ből ki kell törölni
+            'total_price' => $total_price, 
+            'screening_id' => $validated['screening_id']
+        ]);
+
+        $ticket_order_row->save();
+
+        foreach($validated['seats'] as $seat) {
+            $seat_row = TicketOrderSeat::create([
+                'seat_id' => $seat['seat_id'],
+                //'price_id' => $seat['price_id'],
+                'screening_id' => $validated['screening_id'],//ezt az oszlopot db-ből ki kell törölni
+                'ticket_order_id' => $ticket_order_row->id
+            ]);
+
+            $seat_row->save();
+        }
+
+        $response_for_frontend['ticket_order_id'] = $ticket_order_row->id;
+
+        return response()->json($response_for_frontend);
     }
 }

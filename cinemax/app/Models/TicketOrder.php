@@ -14,6 +14,7 @@ class TicketOrder extends Model
         'price_id',
         'quantity',
         'total_price',
+        'ticket_id',
     ];
 
 
