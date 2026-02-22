@@ -1,0 +1,272 @@
+{
+  "info": {
+    "_postman_id": "cb651ae4-71af-4a28-91b4-e0326e0d6ad8",
+    "name": "Cinemax",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51888954",
+    "_collection_link": "https://go.postman.co/collection/51888954-cb651ae4-71af-4a28-91b4-e0326e0d6ad8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "http://localhost:8888/register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "name",
+              "value": "Test elek",
+              "description": "t",
+              "type": "text",
+              "uuid": "2a45de3f-3d8a-410e-81d7-e697cf8ccb7a",
+              "equals": true
+            },
+            {
+              "key": "email",
+              "value": "tesst@gmail.com",
+              "type": "text",
+              "uuid": "bdada3d7-d7a0-4e4f-880e-01c656859127",
+              "equals": true
+            },
+            {
+              "key": "password",
+              "value": "asdASD123!",
+              "type": "text",
+              "uuid": "dd136df5-1eae-442e-8ca3-3eb83067a568",
+              "equals": true
+            },
+            {
+              "key": "password_confirmation",
+              "value": "asdASD123!",
+              "type": "text",
+              "uuid": "4a04e15d-68b3-4d4b-b2f5-77756ace41ee",
+              "equals": true
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8888/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "register"
+          ],
+          "query": [
+            {
+              "key": "name",
+              "value": "zrd",
+              "description": "t",
+              "type": "text",
+              "disabled": true
+            },
+            {
+              "key": "email",
+              "value": "tesst@gmail.com",
+              "type": "text",
+              "disabled": true
+            },
+            {
+              "key": "password",
+              "value": "asdASD123!",
+              "type": "text",
+              "disabled": true
+            },
+            {
+              "key": "password_confirmation",
+              "value": "asdASD123!",
+              "type": "text",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/ticket_orders",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8888/api/ticket_orders",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "ticket_orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/ticket_orders",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "movie_id",
+              "value": "12",
+              "type": "text",
+              "uuid": "8a76053c-2eaa-40b0-88d7-e2d0255c1416",
+              "disabled": true
+            },
+            {
+              "key": "screening_id",
+              "value": "20",
+              "type": "text",
+              "uuid": "b31ac1db-8d28-4e7b-9044-d143b475a7a9"
+            },
+            {
+              "key": "seats[0][seat_id]",
+              "value": "2",
+              "type": "text",
+              "uuid": "a79f3b77-2c9a-4cf6-aed7-6e04601dde58"
+            },
+            {
+              "key": "seats[0][price_id]",
+              "value": "5",
+              "type": "text",
+              "uuid": "af00a568-a1c2-44e2-84c1-4e53c16aa256"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8888/api/ticket_orders",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "ticket_orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/movies/12",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8888/api/movies/12",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "movies",
+            "12"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/movies/12",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8888/api/movies",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "movies"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "email",
+              "value": "tesst@gmail.com",
+              "type": "text",
+              "uuid": "6afbd23a-2db2-4f74-99a7-8b995f0dacb9"
+            },
+            {
+              "key": "password",
+              "value": "asdASD123!",
+              "type": "text",
+              "uuid": "b179dd67-a091-4204-abe4-abefd556cf6b"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8888/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/profile/ticket_orders",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8888/api/profile/ticket_orders",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "profile",
+            "ticket_orders"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
