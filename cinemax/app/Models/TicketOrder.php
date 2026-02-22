@@ -31,7 +31,7 @@ class TicketOrder extends Model
 
     public function price()
     {
-        return $this->belongsTo(Price::class);
+        return $this->hasOne(Price::class,'id','ticket_id');
     }
 
     public function screening()
