@@ -1,4 +1,4 @@
-# 🎬 CinemaCore – Mozi Jegyértékesítő Rendszer (Adatbázis)
+# 🎬 Cinemax – Mozi Jegyértékesítő Rendszer (Adatbázis)
 
 Egy komplex MySQL adatbázis egy modern mozirendszerhez, amely kezeli a filmeket, vetítéseket, ülésfoglalásokat, jegyértékesítést és a büfé webshopot.  
 A rendszer stored procedure-ökre és tranzakciókra épül, biztosítva az adatintegritást és az üzleti logika DB-szintű érvényesítését.
