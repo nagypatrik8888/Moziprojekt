@@ -33,22 +33,22 @@ A rendszer stored procedure-ökre és tranzakciókra épül, biztosítva az adat
 
 ## 📂 Adatbázis struktúra
 
-├── films # Filmek
-├── genres # Műfajok
-├── languages # Nyelvek
-│
-├── rooms # Mozitermek
-├── seats # Ülések termenként
-├── screening # Vetítések (film + terem + idő)
-│
-├── prices # Jegytípusok (adult, student, stb.)
-├── ticket_orders # Jegyrendelések
-├── ticket_order_seats # Jegy–ülés kapcsolótábla
-│
-├── products # Büfé termékek
-├── orders # Webshop rendelések
-├── order_product # Rendelés–termék kapcsoló
-│
+├── films # Filmek<br>
+├── genres # Műfajok<br>
+├── languages # Nyelvek<br>
+│<br>
+├── rooms # Mozitermek<br>
+├── seats # Ülések termenként<br>
+├── screening # Vetítések (film + terem + idő)<br>
+│<br>
+├── prices # Jegytípusok (adult, student, stb.)<br>
+├── ticket_orders # Jegyrendelések<br>
+├── ticket_order_seats # Jegy–ülés kapcsolótábla<br>
+│<br>
+├── products # Büfé termékek<br>
+├── orders # Webshop rendelések<br>
+├── order_product # Rendelés–termék kapcsoló<br>
+│<br>
 └── users # Felhasználók
 ---
 
