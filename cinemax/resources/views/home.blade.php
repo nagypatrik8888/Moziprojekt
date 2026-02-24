@@ -37,12 +37,15 @@
                     <a class="nav-link" href="about">Rólunk</a>
                 </li>
                 <li class="nav-item ms-3">
-                    <a href="login" class="btn btn-outline-gold" id="loginBtn">
-                        <i class="bi bi-person"></i> Bejelentkezés
+                    @if(auth()->check())
+                       <a href="profile" class="btn btn-gold" id="userBtn">
+                        <i class="bi bi-person-circle"></i> <span id="userName">{{auth()->check() ? auth()->user()->name:null}}</span>
                     </a>
-                    <a href="profile" class="btn btn-gold" id="userBtn" style="display:none;">
-                        <i class="bi bi-person-circle"></i> <span id="userName"></span>
-                    </a>
+                    @else
+                        <a href="login" class="btn btn-outline-gold" id="loginBtn">
+                            <i class="bi bi-person"></i> Bejelentkezés
+                        </a>
+                    @endif
                 </li>
             
           <li class="nav-item" id="navAdminItem" style="display:none;"><a class="nav-link text-white-50 fw-bold" href="admin">ADMIN</a></li>
