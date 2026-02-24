@@ -15,7 +15,7 @@ class TicketOrdersController extends Controller
 
     public function index()
     {
-        $order_rows = TicketOrder::with([
+        $order_rows = TicketOrder::with([ //lekérjük az osszes rendelést a kapcsolódó adatokkal
             'user',
             'price',
             'seats'
@@ -23,14 +23,14 @@ class TicketOrdersController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        $response_for_frontend = [
+        $response_for_frontend = [ //valtozo, bele index aminek a megadott erteke tomb 
             'ticket_orders' => [],
         ];
 
 
         foreach ($order_rows as $ticket_order) {
 
-            $ticket_data_for_frontend = [
+            $ticket_data_for_frontend = [ //vegigmegyunk a rendeleseket soronkent vizsgaljuk oket, majd a szukseges mezoket kicsomagoljuk
                 'ticket_order_id' => $ticket_order->id,
                 'screening_id' => $ticket_order->screening_id,
                 'total_price' => $ticket_order->total_price,
@@ -39,40 +39,40 @@ class TicketOrdersController extends Controller
                 'seats' => [],
             ];        
 
-            foreach($ticket_order->seats as $ticket_order_seat){
+            foreach($ticket_order->seats as $ticket_order_seat){ // atadjuk a rendeleshez tartozo szekeket sor/oszlop
                 $ticket_order_seat_data_for_frontend = [
                     'seat_id' => $ticket_order_seat->seat_id,
                     'row_num' => $ticket_order_seat->seat->row_num,
                     'column_num' => $ticket_order_seat->seat->column_num,
                 ];
 
-                $ticket_data_for_frontend['seats'][] = $ticket_order_seat_data_for_frontend;
+                $ticket_data_for_frontend['seats'][] = $ticket_order_seat_data_for_frontend; //seatt adatokat betoltjuk elemenkent tombbe
             }
 
             $response_for_frontend['ticket_orders'][] = $ticket_data_for_frontend;
         }
 
 
-        return response()->json($response_for_frontend);
+        return response()->json($response_for_frontend); //kuldjuk vissza json formatumban a frontendnek
     }
 
 
     public function store(Request $request)
     {
 
-        $response_for_frontend = [];
+        $response_for_frontend = []; 
 
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [ //validaljuk a bejovo adatokat, mind kotelezo, egesz szam
             'screening_id' => 'required|integer',
             'seats.*.seat_id' => 'required|integer',
             'seats.*.price_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors());
+            return response()->json($validator->errors()); //ha fail json error
         }
 
-        $validated = $validator->valid();
+        $validated = $validator->valid();  //ellenorizzuk letezik e a screening
         $screening_row = Screening::where('id','=',$validated['screening_id'])->first();
         if(!$screening_row){ //Ha nincs ilyen screening akkor hibát jelzünk 
             return response()->json(['errors'=> ['Screening was not found!']]);

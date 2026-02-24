@@ -17,7 +17,7 @@ class ProfileTicketOrdersController extends Controller
         $ticket_order_rows = TicketOrder::where('user_id','=',$current_user_id)->with(['user','screening'])->orderBy('id')->get();
 
 
-        foreach($ticket_order_rows as $ticket_order) {
+        foreach($ticket_order_rows as $ticket_order) { //ciklusban elemenkent vizsgaljuk a ticket order sorokat
             $ticket_order_data_for_frontend = [
                 'movie_name' => $ticket_order->screening->film->title,
                 'movie_genre' => $ticket_order->screening->film->genre->name,

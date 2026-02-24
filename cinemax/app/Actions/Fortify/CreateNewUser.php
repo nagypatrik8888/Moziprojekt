@@ -19,7 +19,7 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        Validator::make($input, [
+        Validator::make($input, [ //validaljuk a regisztraciohoz szukseges adatokat
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
@@ -31,7 +31,7 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return User::create([
+        return User::create([ //letrehozunk uj felhasznalot, jelszot hashelve taroljuk
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),

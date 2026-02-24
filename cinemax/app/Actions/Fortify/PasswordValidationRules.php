@@ -11,7 +11,7 @@ trait PasswordValidationRules
      *
      * @return array<int, \Illuminate\Contracts\Validation\Rule|array<mixed>|string>
      */
-    protected function passwordRules(): array
+    protected function passwordRules(): array //jelszo szabalyok
     {
         return ['required', 'string', Password::default(), 'confirmed'];
     }
