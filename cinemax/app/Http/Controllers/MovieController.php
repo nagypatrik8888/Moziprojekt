@@ -14,8 +14,7 @@ class MovieController extends Controller //extends
     //
     public function index()
     {
-        $user = auth()->user();
-        dd(auth());
+
         $movie_rows = Movie::with('genre')->get(); //lekeri adatbazisbol a movie-kat a genre-ákkal és a screening-ekkel egyutt
         //$price_rows = Price::all(); //lekerjuk adatbazisbol az osszes price tablaban levo osszes adatot
         $genre_rows = Genre::all();
@@ -23,7 +22,6 @@ class MovieController extends Controller //extends
         $response_for_frontend = [           //letrehozunk egy response valtozot es abban indexeket pl movie_rows aminek az erteke ures tomb lesz
             'movies' => [],
             'genres' => [],
-            'user' => $user,
             //'prices' => [],
         ];
 
