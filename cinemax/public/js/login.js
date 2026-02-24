@@ -1,13 +1,11 @@
 async function login(email, password,_token) {
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("_token", _token);
-
-
     const response = await fetch("http://localhost:8888/login", {
         method: "POST",
-        body: formData
+        headers: {
+            "Content-type": 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({email:email,password:password,_token:_token})
     });
 
     if (!response.ok) {
