@@ -21,4 +21,16 @@ Route::get('/login', function () {
     return view('login');
 });
 
+Route::get('/bookings', function () {
+    return view('bookings');
+});
+
+Route::get('/admin', function () {
+    return view('admin');
+});
+
+Route::get('/profile', function () {
+    return view('profile');
+});
+
 //TODO::ticket orders controller, + ticket order model 

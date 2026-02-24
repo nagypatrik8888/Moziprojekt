@@ -179,7 +179,7 @@ function wipeAll() {
   if (!confirm("Biztos törlöd az összes localStorage adatot?")) return;
   localStorage.clear();
   // auth.js úgyis beállítja a navot, de biztos ami biztos:
-  window.location.href = "login.html";
+  window.location.href = "login";
 }
 
 function initAdmin() {

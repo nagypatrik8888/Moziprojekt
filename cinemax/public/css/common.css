@@ -235,16 +235,3 @@ a:hover {
 .fst-italic {
     color: #e5e7eb !important;
 }
-
-
-/* ===== VISIBILITY FIX: leírások legyenek fehérek mindenhol ===== */
-.text-muted,
-.text-secondary,
-.text-white-50,
-.opacity-75,
-.cmx-muted,
-.muted,
-.small,
-.form-text{
-    color: rgba(255,255,255,0.95) !important;
-}
