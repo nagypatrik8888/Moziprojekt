@@ -31,6 +31,7 @@
         </div>
 
         <form id="loginForm">
+            @csrf
             <div class="mb-3">
                 <label>Email cím</label>
                 <input type="email" id="loginEmail" class="form-control" required>
