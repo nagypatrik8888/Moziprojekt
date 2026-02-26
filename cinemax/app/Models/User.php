@@ -46,4 +46,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function is_admin(): bool 
+    {
+        return $this->email === 'tesst@gmail.com';//TODO::kell db-be új oszlop hozzá amit nézünk
+    }
 }
