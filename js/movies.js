@@ -319,10 +319,24 @@ function updateTicketUI() {
 function totalTickets() {
     return Object.values(bookingState.ticketCounts).reduce((a, b) => a + (b || 0), 0);
 }
+document.addEventListener("DOMContentLoaded", loadMovies);
 
-function totalPrice() {
-    return TICKET_TYPES.reduce((sum, t) => sum + (bookingState.ticketCounts[t.key] || 0) * t.price, 0);
+async function loadMovies() {
+    try {
+        const data = await apiRequest("/api/movies");
+        if (data && data.movies) {
+            renderMovies(data.movies);
+        }
+    } catch (error) {
+        console.error(error);
+    }
 }
+
+function renderMovies(movies) {
+    const container = document.getElementById("moviesContainer");
+    if (!container) return;
+
+    container.innerHTML = "";
 
 function breakdownText() {
     return TICKET_TYPES
@@ -555,6 +569,16 @@ function endOfWeek(d) {
     x.setDate(x.getDate() + (day === 0 ? 0 : 7 - day));
     x.setHours(23,59,59,999);
     return x;
+    movies.forEach(movie => {
+        const div = document.createElement("div");
+        div.innerHTML = `
+            <h3>${movie.title}</h3>
+            <p>Műfaj: ${movie.genre_name}</p>
+            <p>Értékelés: ${movie.rating}</p>
+            <a href="movies.html?id=${movie.movie_id}">Részletek</a>
+        `;
+        container.appendChild(div);
+    });
 }
 
 function renderQuickDaysRange(startDate, endDate) {
@@ -586,3 +610,4 @@ function renderQuickDaysRange(startDate, endDate) {
         };
     });
 }
+
