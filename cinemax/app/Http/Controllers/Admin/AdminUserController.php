@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Fortify\CreateNewUser;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AdminUserController extends Controller
 {
@@ -30,12 +33,18 @@ class AdminUserController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $createNewUser = new CreateNewUser();
+         $validator = Validator::make($request->all(),[
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:6'],
+            'password' => $createNewUser->getPasswordRulesForValidator(),
         ]);
 
+        if ($validator->fails()) {
+            return response()->json($validator->errors()); //ha fail json error
+        }
+
+        $validated = $validator->valid();  //ellenorizzuk letezik e a screening
         $user = new User();
         $user->name = $validated['name'];
         $user->email = $validated['email'];
