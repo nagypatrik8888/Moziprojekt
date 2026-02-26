@@ -1,14 +1,28 @@
-// Főoldal specifikus funkciók
-document.addEventListener('DOMContentLoaded', function() {
-    loadFeaturedMovies();
+// =============================================================
+// CINEMAX – HOME.JS  (API-alapú)
+// =============================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Filmek betöltése API-ból, majd renderelés
+    loadMoviesFromAPI(loadFeaturedMovies);
 });
 
 function loadFeaturedMovies() {
     const featuredGrid = document.getElementById('featuredMovies');
     if (!featuredGrid) return;
-    
+
     const favorites = getFavorites();
-    
+
+    if (!movies.length) {
+        featuredGrid.innerHTML = `
+            <div class="col-12 text-center py-5 text-muted">
+                <i class="bi bi-exclamation-circle" style="font-size:3rem;"></i>
+                <h4 class="mt-3">Nem sikerült betölteni a filmeket.</h4>
+                <p>Ellenőrizd, hogy a backend szerver fut-e.</p>
+            </div>`;
+        return;
+    }
+
     featuredGrid.innerHTML = movies.slice(0, 3).map(movie => `
         <div class="col-md-4">
             <div class="movie-card">
@@ -38,7 +52,6 @@ function loadFeaturedMovies() {
 function toggleFavorite(movieId) {
     let favorites = getFavorites();
     const idx = favorites.indexOf(movieId);
-    
     if (idx > -1) {
         favorites.splice(idx, 1);
         showToast('Eltávolítva a kedvencekből');
@@ -46,7 +59,6 @@ function toggleFavorite(movieId) {
         favorites.push(movieId);
         showToast('Hozzáadva a kedvencekhez! ❤️');
     }
-    
     setFavorites(favorites);
     loadFeaturedMovies();
 }

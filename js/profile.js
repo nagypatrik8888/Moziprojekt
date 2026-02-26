@@ -1,76 +1,81 @@
-// =========================================================
-// CINEMAX - PROFILE (a projekt eredeti auth rendszerével)
-// - currentUser (common.js) az egyetlen forrás
-// - logout: common.js logout()
-// =========================================================
+// =============================================================
+// CINEMAX – PROFILE.JS  (API-alapú)
+// =============================================================
 
 function fmtNextBooking(bookings) {
-  const now = Date.now();
-  const next = (bookings || [])
-    .map(b => {
-      const iso = `${b.date || ''}T${(b.time || '00:00')}:00`;
-      const t = new Date(iso).getTime();
-      return { b, t };
-    })
-    .filter(x => Number.isFinite(x.t) && x.t > now)
-    .sort((a, c) => a.t - c.t)[0]?.b;
+    const now  = Date.now();
+    const next = (bookings || [])
+        .map(b => {
+            const iso = `${b.screening_date || b.date || ''}T${(b.screening_time || b.time || '00:00')}:00`;
+            const t   = new Date(iso).getTime();
+            return { b, t };
+        })
+        .filter(x => Number.isFinite(x.t) && x.t > now)
+        .sort((a, c) => a.t - c.t)[0]?.b;
 
-  if (!next) return 'Nincs';
-  return `${next.date} • ${next.time} (${next.movieTitle || ''})`;
+    if (!next) return 'Nincs';
+    const date  = next.screening_date || next.date || '';
+    const time  = next.screening_time || next.time || '';
+    const title = next.movie_name     || next.movieTitle || '';
+    return `${date} • ${time} (${title})`;
 }
 
-function initProfile() {
-  // common.js biztosítja
-  const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
-  if (!user) {
-    window.location.href = 'login.html';
-    return;
-  }
+async function initProfile() {
+    if (typeof updateUserInterface === 'function') updateUserInterface();
 
-  const allBookings = (typeof getUserBookings === 'function') ? getUserBookings() : [];
-  const myBookings = (allBookings || []).filter(b => b.userId === user.id);
-  const favs = (typeof getFavorites === 'function') ? getFavorites() : [];
+    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
+    if (!user) { window.location.href = 'login.html'; return; }
 
-  const name = (user.name || user.username || user.email || '').trim();
-  const email = (user.email || '').trim();
-  const points = user.points || 0;
+    const name   = (user.name || user.username || user.email || '').trim();
+    const email  = (user.email || '').trim();
+    const points = user.points || 0;
 
-  const usernameEl = document.getElementById('username');
-  const emailEl = document.getElementById('email');
-  if (usernameEl) usernameEl.textContent = name;
-  if (emailEl) emailEl.textContent = email;
+    const usernameEl = document.getElementById('username');
+    const emailEl    = document.getElementById('email');
+    if (usernameEl) usernameEl.textContent = name;
+    if (emailEl)    emailEl.textContent    = email;
 
-  const bookingCountEl = document.getElementById('bookingCount');
-  const favCountEl = document.getElementById('favCount');
-  const pointsEl = document.getElementById('points');
+    const pointsEl = document.getElementById('points');
+    if (pointsEl) pointsEl.textContent = String(points);
 
-  const totalTickets = myBookings.reduce((sum, b) => sum + (Number(b.tickets) || 0), 0);
+    const badge = document.getElementById('badge');
+    if (badge) badge.textContent = 'SILVER';
 
-  if (bookingCountEl) bookingCountEl.textContent = String(totalTickets);
-  if (favCountEl) favCountEl.textContent = String(Array.isArray(favs) ? favs.length : 0);
-  if (pointsEl) pointsEl.textContent = String(points);
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (typeof logout === 'function') logout();
+            else window.location.href = 'index.html';
+        });
+    }
 
-  const sumBookingsEl = document.getElementById('sumBookings');
-  const sumNextEl = document.getElementById('sumNext');
-  if (sumBookingsEl) sumBookingsEl.textContent = String(totalTickets);
-  if (sumNextEl) sumNextEl.textContent = fmtNextBooking(myBookings);
+    // Foglalások betöltése API-ból
+    let myBookings = [];
+    try {
+        const data = await apiGetProfileTicketOrders();
+        myBookings = data.ticket_orders || [];
+    } catch (err) {
+        console.warn('Profil foglalások betöltése sikertelen, localStorage fallback:', err);
+        // Fallback: helyi cache
+        const all = (typeof getUserBookings === 'function') ? getUserBookings() : [];
+        myBookings = all.filter(b => b.userId === user.id);
+    }
 
-  // badge csak dizájn
-  const badge = document.getElementById('badge');
-  if (badge) badge.textContent = 'SILVER';
+    const favs = (typeof getFavorites === 'function') ? getFavorites() : [];
 
-  // logout gomb
-  const logoutBtn = document.getElementById('logoutBtn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (typeof logout === 'function') logout();
-      else window.location.href = 'index.html';
-    });
-  }
+    // Foglalások száma: API-ból minden sor = 1 jegy
+    const totalTickets = myBookings.length;
 
-  // navbar frissítés (common.js)
-  if (typeof updateUserInterface === 'function') updateUserInterface();
+    const bookingCountEl = document.getElementById('bookingCount');
+    const favCountEl     = document.getElementById('favCount');
+    const sumBookingsEl  = document.getElementById('sumBookings');
+    const sumNextEl      = document.getElementById('sumNext');
+
+    if (bookingCountEl) bookingCountEl.textContent = String(totalTickets);
+    if (favCountEl)     favCountEl.textContent     = String(Array.isArray(favs) ? favs.length : 0);
+    if (sumBookingsEl)  sumBookingsEl.textContent   = String(totalTickets);
+    if (sumNextEl)      sumNextEl.textContent       = fmtNextBooking(myBookings);
 }
 
 document.addEventListener('DOMContentLoaded', initProfile);
