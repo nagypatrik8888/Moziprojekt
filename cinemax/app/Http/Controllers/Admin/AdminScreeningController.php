@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Screening;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 
 class AdminScreeningController extends Controller
 {
@@ -47,13 +49,20 @@ class AdminScreeningController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'film_id' => ['required', 'integer', 'exists:movies,id'],
+        
+        $validator = Validator::make($request->all(), [
+            'film_id' => ['required', 'integer', 'exists:films,id'],
             'room_id' => ['required', 'integer', 'exists:rooms,id'],
 
             'screening_date' => ['required', 'date'],
             'start_time' => ['required', 'date_format:H:i:s'],
         ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()); //ha fail json error
+        }
+
+        $validated = $validator->valid();  //ellenorizzuk letezik e a screening
 
         $screening = new Screening();
         $screening->film_id = $validated['film_id'];
