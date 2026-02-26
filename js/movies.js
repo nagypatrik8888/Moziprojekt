@@ -7,14 +7,14 @@ let currentFilter = 'Összes';
 // Az árak és szék-layout az API-ból jön (apiGetMovie),
 // de fallback értékeket tartunk, ha a backend screenings még üres.
 let TICKET_TYPES = [
-    { key: 'adult',    label: 'Felnőtt',    price: 2490, price_id: null },
-    { key: 'student',  label: 'Diák',       price: 1990, price_id: null },
-    { key: 'child',    label: 'Gyerek',     price: 1690, price_id: null },
-    { key: 'senior',   label: 'Nyugdíjas',  price: 1790, price_id: null },
+    { key: 'adult', label: 'Felnőtt', price: 2490, price_id: null },
+    { key: 'student', label: 'Diák', price: 1990, price_id: null },
+    { key: 'child', label: 'Gyerek', price: 1690, price_id: null },
+    { key: 'senior', label: 'Nyugdíjas', price: 1790, price_id: null },
     { key: 'disabled', label: 'Fogyatékos', price: 1490, price_id: null },
 ];
 
-const SEAT_LAYOUT = { rows: ['A','B','C','D','E','F'], cols: 10 };
+const SEAT_LAYOUT = { rows: ['A', 'B', 'C', 'D', 'E', 'F'], cols: 10 };
 
 let bookingState = resetBookingState(null);
 // Aktuális film részletes adatai (screenings, prices) az API-ból
@@ -162,9 +162,9 @@ async function openBookingModal(movieId) {
     // Árkategóriák frissítése az API válasz alapján
     if (currentMovieDetail?.prices?.length) {
         TICKET_TYPES = currentMovieDetail.prices.map(p => ({
-            key:      p.price_type,
-            label:    priceTypeLabel(p.price_type),
-            price:    Number(p.price),
+            key: p.price_type,
+            label: priceTypeLabel(p.price_type),
+            price: Number(p.price),
             price_id: p.price_id,
         }));
         bookingState.ticketCounts = Object.fromEntries(TICKET_TYPES.map(t => [t.key, 0]));
@@ -172,11 +172,11 @@ async function openBookingModal(movieId) {
 
     // Dátum picker
     const dateInput = document.getElementById('bookingDate');
-    const now       = new Date();
-    const today     = startOfDay(now);
-    const weekEnd   = endOfWeek(now);
-    dateInput.min   = toISODate(today);
-    dateInput.max   = toISODate(weekEnd);
+    const now = new Date();
+    const today = startOfDay(now);
+    const weekEnd = endOfWeek(now);
+    dateInput.min = toISODate(today);
+    dateInput.max = toISODate(weekEnd);
     dateInput.value = toISODate(today);
     bookingState.date = dateInput.value;
 
@@ -230,7 +230,7 @@ async function openBookingModal(movieId) {
 
 /** API price_type -> magyar felirat */
 function priceTypeLabel(type) {
-    const map = { adult:'Felnőtt', student:'Diák', child:'Gyerek', senior:'Nyugdíjas', disabled:'Fogyatékos' };
+    const map = { adult: 'Felnőtt', student: 'Diák', child: 'Gyerek', senior: 'Nyugdíjas', disabled: 'Fogyatékos' };
     return map[type] || type;
 }
 
@@ -338,276 +338,277 @@ function renderMovies(movies) {
 
     container.innerHTML = "";
 
-function breakdownText() {
-    return TICKET_TYPES
-        .map(t => (bookingState.ticketCounts[t.key] || 0) > 0 ? `${t.label}: ${bookingState.ticketCounts[t.key]}` : null)
-        .filter(Boolean).join(' • ');
-}
+    function breakdownText() {
+        return TICKET_TYPES
+            .map(t => (bookingState.ticketCounts[t.key] || 0) > 0 ? `${t.label}: ${bookingState.ticketCounts[t.key]}` : null)
+            .filter(Boolean).join(' • ');
+    }
 
-function enforceSeatCount() {
-    const max = totalTickets();
-    if (bookingState.selectedSeats.length > max)
-        bookingState.selectedSeats = bookingState.selectedSeats.slice(0, max);
-}
+    function enforceSeatCount() {
+        const max = totalTickets();
+        if (bookingState.selectedSeats.length > max)
+            bookingState.selectedSeats = bookingState.selectedSeats.slice(0, max);
+    }
 
-// =============================================================
-// SZÉKEK
-// =============================================================
+    // =============================================================
+    // SZÉKEK
+    // =============================================================
 
-function renderSeats() {
-    const seatsArea = document.getElementById('seatsArea');
-    const hint      = document.getElementById('bookingHint');
+    function renderSeats() {
+        const seatsArea = document.getElementById('seatsArea');
+        const hint = document.getElementById('bookingHint');
 
-    if (!bookingState.date || !bookingState.time) {
-        seatsArea.innerHTML = `
+        if (!bookingState.date || !bookingState.time) {
+            seatsArea.innerHTML = `
             <div class="text-muted py-5">
                 <i class="bi bi-calendar3" style="font-size:2rem;"></i>
                 <div class="mt-2">Válassz napot és időpontot a székekhez.</div>
             </div>`;
-        hint.textContent = 'Válassz napot + időpontot.';
-        return;
-    }
-    if (totalTickets() === 0) {
-        seatsArea.innerHTML = `
+            hint.textContent = 'Válassz napot + időpontot.';
+            return;
+        }
+        if (totalTickets() === 0) {
+            seatsArea.innerHTML = `
             <div class="text-muted py-5">
                 <i class="bi bi-ticket-perforated" style="font-size:2rem;"></i>
                 <div class="mt-2">Előbb válassz jegytípust és darabszámot.</div>
             </div>`;
-        hint.textContent = 'Állíts be legalább 1 jegyet.';
-        return;
+            hint.textContent = 'Állíts be legalább 1 jegyet.';
+            return;
+        }
+
+        hint.textContent = `Válassz pontosan ${totalTickets()} széket.`;
+        const occupied = getOccupiedForShow(bookingState.movieId, bookingState.date, bookingState.time);
+        seatsArea.innerHTML = buildSeatGridHTML(occupied, bookingState.selectedSeats);
     }
 
-    hint.textContent = `Válassz pontosan ${totalTickets()} széket.`;
-    const occupied  = getOccupiedForShow(bookingState.movieId, bookingState.date, bookingState.time);
-    seatsArea.innerHTML = buildSeatGridHTML(occupied, bookingState.selectedSeats);
-}
-
-function buildSeatGridHTML(occupiedSeats, selectedSeats) {
-    const occ = new Set(occupiedSeats);
-    const sel = new Set(selectedSeats);
-    const rowsHtml = SEAT_LAYOUT.rows.map(r => {
-        const colsHtml = Array.from({length: SEAT_LAYOUT.cols}, (_, i) => {
-            const num = i + 1;
-            const id  = `${r}${num}`;
-            const cls = ['seat', occ.has(id) ? 'occupied' : '', sel.has(id) ? 'selected' : ''].join(' ').trim();
-            return `<div class="${cls}" data-seat="${id}" title="${id}">${num}</div>`;
+    function buildSeatGridHTML(occupiedSeats, selectedSeats) {
+        const occ = new Set(occupiedSeats);
+        const sel = new Set(selectedSeats);
+        const rowsHtml = SEAT_LAYOUT.rows.map(r => {
+            const colsHtml = Array.from({ length: SEAT_LAYOUT.cols }, (_, i) => {
+                const num = i + 1;
+                const id = `${r}${num}`;
+                const cls = ['seat', occ.has(id) ? 'occupied' : '', sel.has(id) ? 'selected' : ''].join(' ').trim();
+                return `<div class="${cls}" data-seat="${id}" title="${id}">${num}</div>`;
+            }).join('');
+            return `<div class="seat-row"><div class="row-label">${r}</div>${colsHtml}</div>`;
         }).join('');
-        return `<div class="seat-row"><div class="row-label">${r}</div>${colsHtml}</div>`;
-    }).join('');
-    return `<div class="seat-grid">${rowsHtml}</div>`;
-}
-
-// =============================================================
-// ÖSSZESÍTŐ + FOGLALÁS KÜLDÉSE
-// =============================================================
-
-function updateSummary() {
-    const tCount = totalTickets();
-    const sCount = bookingState.selectedSeats.length;
-
-    document.getElementById('ticketCount').textContent     = `${tCount} db`;
-    document.getElementById('totalPrice').textContent      = `${totalPrice().toLocaleString()} Ft`;
-    document.getElementById('ticketBreakdown').textContent = breakdownText();
-    document.getElementById('selectedSeatsText').textContent =
-        sCount ? `Kiválasztott ülések: ${bookingState.selectedSeats.join(', ')}` : '';
-
-    const canConfirm = bookingState.movieId && bookingState.date && bookingState.time
-        && bookingState.screeningId && tCount > 0 && sCount === tCount;
-    document.getElementById('confirmBookingBtn').disabled = !canConfirm;
-}
-
-async function confirmBooking() {
-    const currentUser = getCurrentUser();
-    const movie = movies.find(m => m.id === bookingState.movieId);
-    if (!currentUser || !movie) return;
-
-    const tCount = totalTickets();
-    if (!bookingState.date || !bookingState.time || tCount === 0) {
-        showToast('Válassz napot, időpontot és jegyeket!', true);
-        return;
-    }
-    if (bookingState.selectedSeats.length !== tCount) {
-        showToast(`Pontosan ${tCount} széket válassz!`, true);
-        return;
-    }
-    if (!bookingState.screeningId) {
-        showToast('Nincs érvényes vetítési időpont kiválasztva!', true);
-        return;
+        return `<div class="seat-grid">${rowsHtml}</div>`;
     }
 
-    // Duplán ellenőrzés
-    const now       = new Date();
-    const todayIso  = toISODate(startOfDay(now));
-    const weekEndIso = toISODate(endOfWeek(now));
-    if (bookingState.date < todayIso || bookingState.date > weekEndIso) {
-        showToast('Csak a mai naptól az aktuális hét végéig tudsz foglalni!', true);
-        return;
+    // =============================================================
+    // ÖSSZESÍTŐ + FOGLALÁS KÜLDÉSE
+    // =============================================================
+
+    function updateSummary() {
+        const tCount = totalTickets();
+        const sCount = bookingState.selectedSeats.length;
+
+        document.getElementById('ticketCount').textContent = `${tCount} db`;
+        document.getElementById('totalPrice').textContent = `${totalPrice().toLocaleString()} Ft`;
+        document.getElementById('ticketBreakdown').textContent = breakdownText();
+        document.getElementById('selectedSeatsText').textContent =
+            sCount ? `Kiválasztott ülések: ${bookingState.selectedSeats.join(', ')}` : '';
+
+        const canConfirm = bookingState.movieId && bookingState.date && bookingState.time
+            && bookingState.screeningId && tCount > 0 && sCount === tCount;
+        document.getElementById('confirmBookingBtn').disabled = !canConfirm;
     }
 
-    const occupiedNow = new Set(getOccupiedForShow(bookingState.movieId, bookingState.date, bookingState.time));
-    if (bookingState.selectedSeats.some(s => occupiedNow.has(s))) {
-        showToast('Valaki közben lefoglalt egy széket. Válassz másikat!', true);
-        bookingState.selectedSeats = [];
-        renderSeats();
-        updateSummary();
-        return;
+    async function confirmBooking() {
+        const currentUser = getCurrentUser();
+        const movie = movies.find(m => m.id === bookingState.movieId);
+        if (!currentUser || !movie) return;
+
+        const tCount = totalTickets();
+        if (!bookingState.date || !bookingState.time || tCount === 0) {
+            showToast('Válassz napot, időpontot és jegyeket!', true);
+            return;
+        }
+        if (bookingState.selectedSeats.length !== tCount) {
+            showToast(`Pontosan ${tCount} széket válassz!`, true);
+            return;
+        }
+        if (!bookingState.screeningId) {
+            showToast('Nincs érvényes vetítési időpont kiválasztva!', true);
+            return;
+        }
+
+        // Duplán ellenőrzés
+        const now = new Date();
+        const todayIso = toISODate(startOfDay(now));
+        const weekEndIso = toISODate(endOfWeek(now));
+        if (bookingState.date < todayIso || bookingState.date > weekEndIso) {
+            showToast('Csak a mai naptól az aktuális hét végéig tudsz foglalni!', true);
+            return;
+        }
+
+        const occupiedNow = new Set(getOccupiedForShow(bookingState.movieId, bookingState.date, bookingState.time));
+        if (bookingState.selectedSeats.some(s => occupiedNow.has(s))) {
+            showToast('Valaki közben lefoglalt egy széket. Válassz másikat!', true);
+            bookingState.selectedSeats = [];
+            renderSeats();
+            updateSummary();
+            return;
+        }
+
+        // API hívás – összerakjuk a seats tömböt
+        // Minden szék kap egy price_id-t: a kiválasztott jegytípusokból FIFO
+        const seatsPayload = buildSeatsPayload();
+
+        try {
+            document.getElementById('confirmBookingBtn').disabled = true;
+            const resp = await apiCreateTicketOrder(bookingState.screeningId, seatsPayload);
+
+            // Helyi cache frissítés
+            setOccupiedForShow(bookingState.movieId, bookingState.date, bookingState.time,
+                [...occupiedNow, ...bookingState.selectedSeats]);
+
+            // Helyi foglalás mentése (bookings.html-hez)
+            const all = getUserBookings();
+            const total = totalPrice();
+            all.push({
+                id: resp.ticket_order_id || Date.now(),
+                userId: currentUser.id,
+                movieId: movie.id,
+                movieTitle: movie.title,
+                date: bookingState.date,
+                time: bookingState.time,
+                tickets: tCount,
+                ticketTypes: bookingState.ticketCounts,
+                seats: bookingState.selectedSeats.join(', '),
+                total,
+            });
+            setUserBookings(all);
+
+            currentUser.bookings = (currentUser.bookings || 0) + tCount;
+            currentUser.points = (currentUser.points || 0) + Math.round(total / 100);
+            setCurrentUser(currentUser);
+
+            showToast('Sikeres foglalás! 🎉');
+            const modalEl = document.getElementById('bookingModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+
+        } catch (err) {
+            console.error('Foglalás sikertelen:', err);
+            showToast(`Foglalás sikertelen: ${err.message}`, true);
+            document.getElementById('confirmBookingBtn').disabled = false;
+        }
     }
 
-    // API hívás – összerakjuk a seats tömböt
-    // Minden szék kap egy price_id-t: a kiválasztott jegytípusokból FIFO
-    const seatsPayload = buildSeatsPayload();
-
-    try {
-        document.getElementById('confirmBookingBtn').disabled = true;
-        const resp = await apiCreateTicketOrder(bookingState.screeningId, seatsPayload);
-
-        // Helyi cache frissítés
-        setOccupiedForShow(bookingState.movieId, bookingState.date, bookingState.time,
-            [...occupiedNow, ...bookingState.selectedSeats]);
-
-        // Helyi foglalás mentése (bookings.html-hez)
-        const all   = getUserBookings();
-        const total = totalPrice();
-        all.push({
-            id:          resp.ticket_order_id || Date.now(),
-            userId:      currentUser.id,
-            movieId:     movie.id,
-            movieTitle:  movie.title,
-            date:        bookingState.date,
-            time:        bookingState.time,
-            tickets:     tCount,
-            ticketTypes: bookingState.ticketCounts,
-            seats:       bookingState.selectedSeats.join(', '),
-            total,
-        });
-        setUserBookings(all);
-
-        currentUser.bookings = (currentUser.bookings || 0) + tCount;
-        currentUser.points   = (currentUser.points || 0) + Math.round(total / 100);
-        setCurrentUser(currentUser);
-
-        showToast('Sikeres foglalás! 🎉');
-        const modalEl = document.getElementById('bookingModal');
-        const modal   = bootstrap.Modal.getInstance(modalEl);
-        if (modal) modal.hide();
-
-    } catch (err) {
-        console.error('Foglalás sikertelen:', err);
-        showToast(`Foglalás sikertelen: ${err.message}`, true);
-        document.getElementById('confirmBookingBtn').disabled = false;
+    /**
+     * Összerakja a seats[]-t az API-nak.
+     * Minden kiválasztott székhez hozzárendeli a megfelelő price_id-t
+     * a ticketCounts arányának megfelelően (FIFO).
+     */
+    function buildSeatsPayload() {
+        const queue = [];
+        for (const t of TICKET_TYPES) {
+            const cnt = bookingState.ticketCounts[t.key] || 0;
+            for (let i = 0; i < cnt; i++) queue.push(t.price_id);
+        }
+        return bookingState.selectedSeats.map((seatLabel, i) => ({
+            seat_id: seatIdFromLabel(seatLabel),
+            price_id: queue[i] ?? queue[0],
+        }));
     }
-}
 
-/**
- * Összerakja a seats[]-t az API-nak.
- * Minden kiválasztott székhez hozzárendeli a megfelelő price_id-t
- * a ticketCounts arányának megfelelően (FIFO).
- */
-function buildSeatsPayload() {
-    const queue = [];
-    for (const t of TICKET_TYPES) {
-        const cnt = bookingState.ticketCounts[t.key] || 0;
-        for (let i = 0; i < cnt; i++) queue.push(t.price_id);
-    }
-    return bookingState.selectedSeats.map((seatLabel, i) => ({
-        seat_id:  seatIdFromLabel(seatLabel),
-        price_id: queue[i] ?? queue[0],
-    }));
-}
-
-/**
- * 'A3' -> seat_id keresés a backend screening seat listájából,
- * vagy fallback: numerikus konverzió (sor * 10 + szám).
- */
-function seatIdFromLabel(label) {
-    // Ha a backend visszaad seat listát a screeningben, keressük meg
-    const screenings = currentMovieDetail?.movie?.screenings || [];
-    const sc = screenings.find(s => s.screening_id == bookingState.screeningId);
-    if (sc?.seats) {
-        const row = label[0];
+    /**
+     * 'A3' -> seat_id keresés a backend screening seat listájából,
+     * vagy fallback: numerikus konverzió (sor * 10 + szám).
+     */
+    function seatIdFromLabel(label) {
+        // Ha a backend visszaad seat listát a screeningben, keressük meg
+        const screenings = currentMovieDetail?.movie?.screenings || [];
+        const sc = screenings.find(s => s.screening_id == bookingState.screeningId);
+        if (sc?.seats) {
+            const row = label[0];
+            const col = parseInt(label.slice(1));
+            const seat = sc.seats.find(s => s.row_num == (row.charCodeAt(0) - 64) && s.column_num == col);
+            if (seat) return seat.seat_id;
+        }
+        // Fallback: sor betű -> szám, oszlop
+        const row = label.charCodeAt(0) - 64;  // A=1, B=2...
         const col = parseInt(label.slice(1));
-        const seat = sc.seats.find(s => s.row_num == (row.charCodeAt(0) - 64) && s.column_num == col);
-        if (seat) return seat.seat_id;
+        return row * 10 + col;  // egyszerű hash
     }
-    // Fallback: sor betű -> szám, oszlop
-    const row = label.charCodeAt(0) - 64;  // A=1, B=2...
-    const col = parseInt(label.slice(1));
-    return row * 10 + col;  // egyszerű hash
-}
 
-// =============================================================
-// FOGLALT SZÉKEK – CACHE
-// =============================================================
+    // =============================================================
+    // FOGLALT SZÉKEK – CACHE
+    // =============================================================
 
-function showKey(movieId, date, time) { return `${movieId}|${date}|${time}`; }
+    function showKey(movieId, date, time) { return `${movieId}|${date}|${time}`; }
 
-function getOccupiedForShow(movieId, date, time) {
-    const store = getOccupiedSeats();
-    return store[showKey(movieId, date, time)] || [];
-}
+    function getOccupiedForShow(movieId, date, time) {
+        const store = getOccupiedSeats();
+        return store[showKey(movieId, date, time)] || [];
+    }
 
-function setOccupiedForShow(movieId, date, time, seats) {
-    const store = getOccupiedSeats();
-    store[showKey(movieId, date, time)] = Array.from(new Set(seats));
-    setOccupiedSeats(store);
-}
+    function setOccupiedForShow(movieId, date, time, seats) {
+        const store = getOccupiedSeats();
+        store[showKey(movieId, date, time)] = Array.from(new Set(seats));
+        setOccupiedSeats(store);
+    }
 
-// =============================================================
-// DÁTUM SEGÉDEK
-// =============================================================
+    // =============================================================
+    // DÁTUM SEGÉDEK
+    // =============================================================
 
-function toISODate(d) {
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
+    function toISODate(d) {
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
 
-function startOfDay(d) { const x = new Date(d); x.setHours(0,0,0,0); return x; }
+    function startOfDay(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
 
-function endOfWeek(d) {
-    const x = new Date(d);
-    x.setHours(0,0,0,0);
-    const day = x.getDay();
-    x.setDate(x.getDate() + (day === 0 ? 0 : 7 - day));
-    x.setHours(23,59,59,999);
-    return x;
-    movies.forEach(movie => {
-        const div = document.createElement("div");
-        div.innerHTML = `
+    function endOfWeek(d) {
+        const x = new Date(d);
+        x.setHours(0, 0, 0, 0);
+        const day = x.getDay();
+        x.setDate(x.getDate() + (day === 0 ? 0 : 7 - day));
+        x.setHours(23, 59, 59, 999);
+        return x;
+        movies.forEach(movie => {
+            const div = document.createElement("div");
+            div.innerHTML = `
             <h3>${movie.title}</h3>
             <p>Műfaj: ${movie.genre_name}</p>
             <p>Értékelés: ${movie.rating}</p>
             <a href="movies.html?id=${movie.movie_id}">Részletek</a>
         `;
-        container.appendChild(div);
-    });
+            container.appendChild(div);
+        });
+    }
+
+    function renderQuickDaysRange(startDate, endDate) {
+        const wrap = document.getElementById('quickDays');
+        if (!wrap) return;
+        const start = startOfDay(startDate);
+        const end = startOfDay(endDate);
+        const days = [];
+        for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) days.push(new Date(d));
+
+        wrap.innerHTML = days.map(d => {
+            const iso = toISODate(d);
+            const label = `${d.getMonth() + 1}.${String(d.getDate()).padStart(2, '0')}.`;
+            return `<button class="btn btn-outline-gold btn-sm" type="button" data-date="${iso}">${label}</button>`;
+        }).join('');
+
+        wrap.querySelectorAll('button[data-date]').forEach(btn => {
+            btn.onclick = () => {
+                const iso = btn.dataset.date;
+                document.getElementById('bookingDate').value = iso;
+                bookingState.date = iso;
+                bookingState.time = null;
+                bookingState.screeningId = null;
+                bookingState.selectedSeats = [];
+                const screenings = currentMovieDetail?.movie?.screenings || [];
+                renderTimesFromScreenings(screenings, iso);
+                renderSeats();
+                updateSummary();
+            };
+        });
+    }
+
 }
-
-function renderQuickDaysRange(startDate, endDate) {
-    const wrap = document.getElementById('quickDays');
-    if (!wrap) return;
-    const start = startOfDay(startDate);
-    const end   = startOfDay(endDate);
-    const days  = [];
-    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) days.push(new Date(d));
-
-    wrap.innerHTML = days.map(d => {
-        const iso   = toISODate(d);
-        const label = `${d.getMonth()+1}.${String(d.getDate()).padStart(2,'0')}.`;
-        return `<button class="btn btn-outline-gold btn-sm" type="button" data-date="${iso}">${label}</button>`;
-    }).join('');
-
-    wrap.querySelectorAll('button[data-date]').forEach(btn => {
-        btn.onclick = () => {
-            const iso = btn.dataset.date;
-            document.getElementById('bookingDate').value = iso;
-            bookingState.date = iso;
-            bookingState.time = null;
-            bookingState.screeningId = null;
-            bookingState.selectedSeats = [];
-            const screenings = currentMovieDetail?.movie?.screenings || [];
-            renderTimesFromScreenings(screenings, iso);
-            renderSeats();
-            updateSummary();
-        };
-    });
-}
-

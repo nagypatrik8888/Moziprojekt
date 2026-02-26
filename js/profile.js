@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // =============================================================
 // CINEMAX – PROFILE.JS  (API-alapú)
 // =============================================================
@@ -80,7 +79,6 @@ async function initProfile() {
 }
 
 document.addEventListener('DOMContentLoaded', initProfile);
-=======
 document.addEventListener("DOMContentLoaded", loadOrders);
 
 async function loadOrders() {
@@ -105,4 +103,3 @@ async function loadOrders() {
         console.error(error);
     }
 }
->>>>>>> 0b09bc06e12b1a018eb3d13f505bf715c2196617
