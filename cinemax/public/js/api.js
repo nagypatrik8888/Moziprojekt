@@ -1,116 +1,201 @@
-// =============================================================
-// CINEMAX – API RÉTEG
-// Alap URL: a Laravel backend portja (fejlesztéskor localhost:8888)
-// =============================================================
-
+/* ============================================================
+   CINEMAX - API MODULE
+   Backend: http://localhost:8888
+   Auth: Laravel Fortify + Sanctum (cookie/session alapú)
+   Minden API hívás előtt CSRF token szükséges (sanctum/csrf-cookie)
+============================================================ */
 const API_BASE = 'http://localhost:8888';
 
-// --- Segéd ---
-async function apiFetch(path, options = {}) {
-    const url = `${API_BASE}${path}`;
-    const defaults = {
-        headers: { 'Accept': 'application/json' },
-        credentials: 'include',   // session cookie (Sanctum)
-    };
-    const res = await fetch(url, { ...defaults, ...options, headers: { ...defaults.headers, ...(options.headers || {}) } });
-    if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw Object.assign(new Error(err.message || `HTTP ${res.status}`), { status: res.status, data: err });
-    }
-    return res.json();
-}
-
-// =============================================================
-// FILMEK
-// =============================================================
-
-/**
- * GET /api/movies
- * Válasz: { movies: [...], genres: [...] }
- */
-async function apiGetMovies() {
-    return apiFetch('/api/movies');
-}
-
-/**
- * GET /api/movies/{movie_id}
- * Válasz: { movie: { ...film, screenings: [...] }, prices: [...] }
- */
-async function apiGetMovie(movieId) {
-    return apiFetch(`/api/movies/${movieId}`);
-}
-
-// =============================================================
-// JEGYVÁSÁRLÁS
-// =============================================================
-
-/**
- * POST /api/ticket_orders
- * Body (FormData):
- *   screening_id  – kötelező
- *   seats[0][seat_id]   – ülőhely id
- *   seats[0][price_id]  – árkategória id
- *   (többi szék: seats[1]..., seats[2]... stb.)
- *
- * Válasz: { ticket_order_id: 13 }
- */
-async function apiCreateTicketOrder(screeningId, seats) {
-    // seats: [{ seat_id, price_id }, ...]
-    const fd = new FormData();
-    fd.append('screening_id', screeningId);
-    seats.forEach((s, i) => {
-        fd.append(`seats[${i}][seat_id]`, s.seat_id);
-        fd.append(`seats[${i}][price_id]`, s.price_id);
+// CSRF token lekérés (Sanctum SPA auth-hoz szükséges)
+async function apiCsrf() {
+    await fetch(`${API_BASE}/sanctum/csrf-cookie`, {
+        credentials: 'include',
     });
-    return apiFetch('/api/ticket_orders', { method: 'POST', body: fd });
 }
 
-/**
- * GET /api/ticket_orders  (admin)
- * Válasz: { ticket_orders: [...] }
- */
-async function apiGetAllTicketOrders() {
-    return apiFetch('/api/ticket_orders');
+// Általános fetch helper
+async function apiFetch(path, options = {}) {
+    const defaultOptions = {
+        credentials: 'include',
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            ...(options.headers || {}),
+        },
+    };
+
+    // XSRF-TOKEN cookie kiolvasása és fejléchez adása
+    const xsrfToken = getCookieValue('XSRF-TOKEN');
+    if (xsrfToken) {
+        defaultOptions.headers['X-XSRF-TOKEN'] = decodeURIComponent(xsrfToken);
+    }
+
+    const mergedOptions = { ...defaultOptions, ...options, headers: defaultOptions.headers };
+    const response = await fetch(`${API_BASE}${path}`, mergedOptions);
+    return response;
 }
 
-/**
- * GET /api/profile/ticket_orders  (bejelentkezett user saját foglalásai)
- * Válasz: { ticket_orders: [...] }
- */
-async function apiGetProfileTicketOrders() {
-    return apiFetch('/api/profile/ticket_orders');
+function getCookieValue(name) {
+    const match = document.cookie.match(new RegExp('(^|;\\s*)' + name + '=([^;]*)'));
+    return match ? match[2] : null;
 }
 
-// =============================================================
-// AUTH (Breeze / Sanctum web routes)
-// =============================================================
+// FormData POST
+async function apiPost(path, data) {
+    await apiCsrf();
+    const formData = new FormData();
+    for (const [key, value] of Object.entries(data)) {
+        if (Array.isArray(value)) {
+            value.forEach((item, i) => {
+                if (typeof item === 'object') {
+                    for (const [k, v] of Object.entries(item)) {
+                        formData.append(`${key}[${i}][${k}]`, v);
+                    }
+                } else {
+                    formData.append(`${key}[${i}]`, item);
+                }
+            });
+        } else {
+            formData.append(key, value);
+        }
+    }
+    return apiFetch(path, { method: 'POST', body: formData });
+}
 
-/**
- * POST /login   – FormData: email, password
- * Siker esetén a szerver session cookie-t állít be.
- */
+// JSON POST
+async function apiPostJson(path, data) {
+    await apiCsrf();
+    return apiFetch(path, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+}
+
+// GET
+async function apiGet(path) {
+    return apiFetch(path, { method: 'GET' });
+}
+
+/* ============================================================
+   AUTH
+============================================================ */
+
+async function apiRegister(name, email, password, passwordConfirmation) {
+    await apiCsrf();
+    const res = await apiPost('/register', {
+        name,
+        email,
+        password,
+        password_confirmation: passwordConfirmation,
+    });
+    return res;
+}
+
 async function apiLogin(email, password) {
-    const fd = new FormData();
-    fd.append('email', email);
-    fd.append('password', password);
-    return apiFetch('/login', { method: 'POST', body: fd });
+    await apiCsrf();
+    const res = await apiPost('/login', { email, password });
+    return res;
 }
 
-/**
- * POST /register – FormData: name, email, password, password_confirmation
- */
-async function apiRegister(name, email, password) {
-    const fd = new FormData();
-    fd.append('name', name);
-    fd.append('email', email);
-    fd.append('password', password);
-    fd.append('password_confirmation', password);
-    return apiFetch('/register', { method: 'POST', body: fd });
+async function apiLogout() {
+    await apiCsrf();
+    const res = await apiFetch('/logout', { method: 'POST' });
+    return res;
 }
 
-/**
- * GET /api/user – visszaadja a bejelentkezett usert (Sanctum)
- */
 async function apiGetCurrentUser() {
-    return apiFetch('/api/user');
+    const res = await apiGet('/api/user');
+    if (res.ok) return res.json();
+    return null;
+}
+
+/* ============================================================
+   MOVIES
+============================================================ */
+
+async function apiGetMovies() {
+    const res = await apiGet('/api/movies');
+    if (res.ok) return res.json();
+    throw new Error('Nem sikerült betölteni a filmeket.');
+}
+
+async function apiGetMovie(movieId) {
+    const res = await apiGet(`/api/movies/${movieId}`);
+    if (res.ok) return res.json();
+    throw new Error('Nem sikerült betölteni a film adatait.');
+}
+
+/* ============================================================
+   TICKET ORDERS
+============================================================ */
+
+async function apiGetTicketOrders() {
+    const res = await apiGet('/api/ticket_orders');
+    if (res.ok) return res.json();
+    throw new Error('Nem sikerült betölteni a foglalásokat.');
+}
+
+async function apiCreateTicketOrder(screeningId, seats) {
+    // seats: [{seat_id, price_id}, ...]
+    await apiCsrf();
+    const formData = new FormData();
+    formData.append('screening_id', screeningId);
+    seats.forEach((seat, i) => {
+        formData.append(`seats[${i}][seat_id]`, seat.seat_id);
+        formData.append(`seats[${i}][price_id]`, seat.price_id);
+    });
+    const xsrfToken = getCookieValue('XSRF-TOKEN');
+    const headers = {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+    };
+    if (xsrfToken) headers['X-XSRF-TOKEN'] = decodeURIComponent(xsrfToken);
+
+    return fetch(`${API_BASE}/api/ticket_orders`, {
+        method: 'POST',
+        credentials: 'include',
+        headers,
+        body: formData,
+    });
+}
+
+async function apiGetProfileTicketOrders() {
+    const res = await apiGet('/api/profile/ticket_orders');
+    if (res.ok) return res.json();
+    throw new Error('Nem sikerült betölteni a saját foglalásokat.');
+}
+
+/* ============================================================
+   ADMIN
+============================================================ */
+
+async function apiAdminGetUsers() {
+    const res = await apiGet('/api/admin/users');
+    if (res.ok) return res.json();
+    throw new Error('Nincs jogosultság.');
+}
+
+async function apiAdminGetFilms() {
+    const res = await apiGet('/api/admin/films');
+    if (res.ok) return res.json();
+    throw new Error('Nincs jogosultság.');
+}
+
+async function apiAdminGetScreenings() {
+    const res = await apiGet('/api/admin/screenings');
+    if (res.ok) return res.json();
+    throw new Error('Nincs jogosultság.');
+}
+
+async function apiAdminCreateFilm(data) {
+    await apiCsrf();
+    return apiPost('/api/admin/films', data);
+}
+
+async function apiAdminCreateScreening(data) {
+    await apiCsrf();
+    return apiPost('/api/admin/screenings', data);
 }

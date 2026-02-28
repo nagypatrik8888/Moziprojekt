@@ -47,7 +47,7 @@ Route::get('/profile', function () {
 
 
 
-Route::prefix('api')->middleware([IsAdmin::class])->group(function () {
+Route::prefix('api')->group(function () {
     Route::get('/user', function (Request $request) {
         return ['user'=> auth()->user()];
     })->middleware('auth:sanctum');
@@ -59,7 +59,7 @@ Route::prefix('api')->middleware([IsAdmin::class])->group(function () {
     Route::post('/user/login', [UserController::class, 'login']);
 
     // Admin API endpoints
-    Route::prefix('admin')->group(function () {
+    Route::prefix('admin')->middleware([IsAdmin::class])->group(function () {
         Route::get('/users', [AdminUserController::class, 'index']);
         Route::post('/users', [AdminUserController::class, 'store']);
 

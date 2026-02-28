@@ -109,11 +109,7 @@
         <div class="toast-body" id="toastMessage"></div>
     </div>
 </div>
-<script src="js/auth.js"></script>
+@include('shared.layout.scripts')
 
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-<script src="js/common.js"></script>
-<script src="js/login.js"></script>
 </body>
 </html>

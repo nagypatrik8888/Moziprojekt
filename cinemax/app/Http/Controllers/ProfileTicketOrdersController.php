@@ -13,7 +13,7 @@ class ProfileTicketOrdersController extends Controller
         $response_for_frontend = [
             'ticket_orders' => [],
         ];
-        $current_user_id = 12; //amikor frontenden be tudunk jelentkezni akkor ki kell cserélni valós felhasználó adatra
+        $current_user_id = auth()->user()->id; 
         $ticket_order_rows = TicketOrder::where('user_id','=',$current_user_id)->with(['user','screening'])->orderBy('id')->get();
 
 

@@ -73,10 +73,8 @@
 </div>
 
 <!-- QR lib -->
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-<script src="js/common.js"></script>
+@include('shared.layout.scripts')
 <script src="js/bookings.js"></script>
+
 </body>
 </html>

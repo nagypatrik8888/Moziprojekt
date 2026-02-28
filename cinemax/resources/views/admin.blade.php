@@ -140,9 +140,9 @@
     </div>
   </main>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-  <script src="js/common.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/admin.js"></script>
+@include('shared.layout.scripts')
+<script src="js/admin.js"></script>
+
+
 </body>
 </html>

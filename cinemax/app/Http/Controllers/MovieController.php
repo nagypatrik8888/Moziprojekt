@@ -35,7 +35,7 @@ class MovieController extends Controller //extends
                 'rating' =>$movie->rating,
                 'duration' => $movie ->duration_min,
                 'description' => $movie ->description,
-
+                'poster_url' => $movie->poster_url,
             ];
 
 
