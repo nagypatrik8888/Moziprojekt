@@ -9,15 +9,45 @@
   "item": [
     {
       "name": "http://localhost:8888/register",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "POST",
-        "header": [],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{XSRF}}",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "formdata",
           "formdata": [
             {
               "key": "name",
-              "value": "Test elek",
+              "value": "Test elek3",
               "description": "t",
               "type": "text",
               "uuid": "2a45de3f-3d8a-410e-81d7-e697cf8ccb7a",
@@ -25,21 +55,21 @@
             },
             {
               "key": "email",
-              "value": "tesst@gmail.com",
+              "value": "tesst@gmail.com33",
               "type": "text",
               "uuid": "bdada3d7-d7a0-4e4f-880e-01c656859127",
               "equals": true
             },
             {
               "key": "password",
-              "value": "asdASD123!",
+              "value": "asdASD123!3",
               "type": "text",
               "uuid": "dd136df5-1eae-442e-8ca3-3eb83067a568",
               "equals": true
             },
             {
               "key": "password_confirmation",
-              "value": "asdASD123!",
+              "value": "asdASD123!3",
               "type": "text",
               "uuid": "4a04e15d-68b3-4d4b-b2f5-77756ace41ee",
               "equals": true
@@ -59,14 +89,14 @@
           "query": [
             {
               "key": "name",
-              "value": "zrd",
+              "value": "zrd3423",
               "description": "t",
               "type": "text",
               "disabled": true
             },
             {
               "key": "email",
-              "value": "tesst@gmail.com",
+              "value": "tesst@gmail.com234234",
               "type": "text",
               "disabled": true
             },
@@ -89,6 +119,20 @@
     },
     {
       "name": "http://localhost:8888/api/ticket_orders",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -109,9 +153,29 @@
     },
     {
       "name": "http://localhost:8888/api/ticket_orders",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "POST",
-        "header": [],
+        "header": [
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{XSRF}}",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "formdata",
           "formdata": [
@@ -136,7 +200,7 @@
             },
             {
               "key": "seats[0][price_id]",
-              "value": "5",
+              "value": "6",
               "type": "text",
               "uuid": "af00a568-a1c2-44e2-84c1-4e53c16aa256"
             }
@@ -159,6 +223,20 @@
     },
     {
       "name": "http://localhost:8888/api/movies/12",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -179,7 +257,73 @@
       "response": []
     },
     {
-      "name": "http://localhost:8888/api/movies/12",
+      "name": "http://localhost:8888/api/movies",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", () => {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Content-Type is application/json\", () => {\r",
+              "    pm.response.to.have.header(\"Content-Type\");\r",
+              "    const ct = pm.response.headers.get(\"Content-Type\");\r",
+              "    pm.expect(ct).to.include(\"application/json\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is under 2000ms\", () => {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "});\r",
+              "\r",
+              "let jsonData;\r",
+              "pm.test(\"Response body is valid JSON with movies and genres\", () => {\r",
+              "    jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.be.an(\"object\");\r",
+              "    pm.expect(jsonData).to.have.property(\"movies\");\r",
+              "    pm.expect(jsonData).to.have.property(\"genres\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Movies is an array and has at least one item\", () => {\r",
+              "    pm.expect(jsonData.movies).to.be.an(\"array\");\r",
+              "    pm.expect(jsonData.movies.length).to.be.at.least(1);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Each movie has required fields with correct types\", () => {\r",
+              "    jsonData.movies.forEach((m) => {\r",
+              "        pm.expect(m).to.be.an(\"object\");\r",
+              "        pm.expect(m).to.have.property(\"title\").that.is.a(\"string\");\r",
+              "        pm.expect(m).to.have.property(\"movie_id\").that.is.a(\"number\");\r",
+              "        pm.expect(m).to.have.property(\"genre_name\").that.is.a(\"string\");\r",
+              "        pm.expect(m).to.have.property(\"release_date\").that.is.a(\"string\");\r",
+              "        // Check release_date parseable as date\r",
+              "        const d = Date.parse(m.release_date);\r",
+              "        pm.expect(isNaN(d)).to.be.false;\r",
+              "        pm.expect(m).to.have.property(\"rating\").that.is.a(\"number\");\r",
+              "        pm.expect(m.rating).to.be.within(0, 10);\r",
+              "        pm.expect(m).to.have.property(\"duration\").that.is.a(\"number\");\r",
+              "        pm.expect(m).to.have.property(\"description\").that.is.a(\"string\");\r",
+              "    });\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Genres is an array of objects with genre_name\", () => {\r",
+              "    pm.expect(jsonData.genres).to.be.an(\"array\");\r",
+              "    jsonData.genres.forEach((g) => {\r",
+              "        pm.expect(g).to.be.an(\"object\");\r",
+              "        pm.expect(g).to.have.property(\"genre_name\").that.is.a(\"string\");\r",
+              "    });\r",
+              "});\r",
+              "\r",
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -205,6 +349,7 @@
           "listen": "test",
           "script": {
             "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
               ""
             ],
             "type": "text/javascript",
@@ -215,7 +360,23 @@
       ],
       "request": {
         "method": "POST",
-        "header": [],
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{XSRF}}",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "formdata",
           "formdata": [
@@ -223,13 +384,13 @@
               "key": "email",
               "value": "tesst@gmail.com",
               "type": "text",
-              "uuid": "6afbd23a-2db2-4f74-99a7-8b995f0dacb9"
+              "uuid": "d804333e-d34f-4d58-a236-9641e0f892ec"
             },
             {
               "key": "password",
               "value": "asdASD123!",
               "type": "text",
-              "uuid": "b179dd67-a091-4204-abe4-abefd556cf6b"
+              "uuid": "96438fde-56cc-4651-bbdf-059159c3376e"
             }
           ]
         },
@@ -249,6 +410,20 @@
     },
     {
       "name": "http://localhost:8888/api/profile/ticket_orders",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -263,6 +438,437 @@
             "api",
             "profile",
             "ticket_orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{XSRF}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "password",
+              "value": "asdASD123!",
+              "type": "text",
+              "uuid": "745ddf8c-50d5-4f50-8d5f-0c07d3a33c6a"
+            },
+            {
+              "key": "email",
+              "value": "tesst@gmail.com",
+              "type": "text",
+              "uuid": "25d416ab-0bc2-4635-aad1-e3dbbf91a858"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8888/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/admin/users",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8888/api/admin/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "admin",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/admin/user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8888/api/user",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "user"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/admin/films",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8888/api/admin/films",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "admin",
+            "films"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/admin/screenings",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8888/api/admin/screenings",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "admin",
+            "screenings"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/admin/films",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{XSRF}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "qwwerrgbhddhj",
+              "type": "text",
+              "uuid": "eb5a718e-6617-4714-a127-f20a6e6f5ab6"
+            },
+            {
+              "key": "genre_id",
+              "value": "2",
+              "type": "text",
+              "uuid": "45de7ac9-f894-4dfb-962d-72949e55cfd8"
+            },
+            {
+              "key": "release_date",
+              "value": "2007-01-22",
+              "type": "text",
+              "uuid": "7efa3016-da21-4513-aa9e-37f1242c763c"
+            },
+            {
+              "key": "rating",
+              "value": "3.5",
+              "type": "text",
+              "uuid": "612e5d2f-e1b4-4bca-a976-41814d75a0e2"
+            },
+            {
+              "key": "duration_min",
+              "value": "122",
+              "type": "text",
+              "uuid": "5ffbbc06-06b6-491c-808f-14e0965de561"
+            },
+            {
+              "key": "description",
+              "value": "asdfghj",
+              "type": "text",
+              "uuid": "60d78aca-3ead-467e-af65-ac09fca0fb0f"
+            },
+            {
+              "key": "language",
+              "value": "hun",
+              "type": "text",
+              "uuid": "c10cbcce-7fea-431f-90f1-68699b6d0536"
+            },
+            {
+              "key": "language_id",
+              "value": "1",
+              "type": "text",
+              "uuid": "c6215949-a94b-41a5-b2a2-fa32c6630275"
+            },
+            {
+              "key": "poster",
+              "type": "file",
+              "uuid": "7db9a6bd-0705-4f7a-89d3-d7aa9965d67f",
+              "src": "/D:/nagyp/School projects/hx/vizsgaremek/Moziprojekt/Moziprojekt Git/Moziprojekt/cinemax/Képernyőkép 2026-02-28 104126.png"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8888/api/admin/films",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "admin",
+            "films"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/admin/users",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{XSRF}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "name",
+              "value": "asd",
+              "type": "text",
+              "uuid": "877cb8fa-d231-4713-8944-d87921ebe798"
+            },
+            {
+              "key": "email",
+              "value": "asd@asd.hu",
+              "type": "text",
+              "uuid": "9affcbe5-c9e8-4fc5-9977-7f51917a7b54"
+            },
+            {
+              "key": "password",
+              "value": "ASDasd123!",
+              "type": "text",
+              "uuid": "80e1750a-05b3-47a3-a1f0-e05eb1ea4440"
+            },
+            {
+              "key": "password_confirmation",
+              "value": "ASDasd123!",
+              "type": "text",
+              "uuid": "4f9d2e23-8ef8-4c75-aaea-1628e381200b"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8888/api/admin/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "admin",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/admin/screenings",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{XSRF}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "film_id",
+              "value": "17",
+              "type": "text",
+              "uuid": "99a0ceec-4802-45d9-a17b-d677e0b71c90"
+            },
+            {
+              "key": "room_id",
+              "value": "4",
+              "type": "text",
+              "uuid": "bd98bfff-75bb-4b24-a8a3-87368503be98"
+            },
+            {
+              "key": "screening_date",
+              "value": "1111-11-11",
+              "type": "text",
+              "uuid": "139ac3a5-67ac-40e7-a570-903af07dacae"
+            },
+            {
+              "key": "start_time",
+              "value": "00:00:00",
+              "type": "text",
+              "uuid": "1c202859-6936-416d-8ca2-59cb9134bdca"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8888/api/admin/screenings",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "admin",
+            "screenings"
           ]
         }
       },
