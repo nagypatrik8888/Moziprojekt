@@ -65,6 +65,7 @@ Route::prefix('api')->group(function () {
 
         Route::get('/films', [AdminFilmController::class, 'index']);
         Route::post('/films', [AdminFilmController::class, 'store']);
+        Route::post('/films/{movie_id}', [AdminFilmController::class, 'update']); //Lehetne PUT/Path
 
         Route::get('/screenings', [AdminScreeningController::class, 'index']);
         Route::post('/screenings', [AdminScreeningController::class, 'store']);

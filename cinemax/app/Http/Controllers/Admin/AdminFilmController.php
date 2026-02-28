@@ -77,4 +77,49 @@ class AdminFilmController extends Controller
             'film_id' => $movie->id,
         ], 201);
     }
+
+    public function update(int $movie_id,Request $request) {
+         $validator = Validator::make($request->all(), [
+            'title' => ['required', 'string', 'max:255'],
+            'genre_id' => ['required', 'integer', 'exists:genres,id'],
+            'release_date' => ['required', 'date'],
+            'rating' => ['required', 'numeric'],
+            'duration_min' => ['required', 'integer', 'min:1'],
+            'description' => ['required', 'string'],
+            'language' => ['required', 'string'],
+            'language_id' => ['required', 'integer', 'exists:languages,id'],
+            'poster' => ['mimes:jpg,png,jpeg,webp'] //validáljuk hogy milyen fajta file
+
+        ]);
+         if ($validator->fails()) {
+            return response()->json($validator->errors()); //ha fail json error
+        }
+
+        $validated = $validator->valid();  //ellenorizzuk letezik e a screening
+
+        $file = $request->file('poster');
+        if($file){
+            $path = '/storage/' . $file->storePublicly('uploads','public');
+        }
+
+        $movie = Movie::find($movie_id);
+        $movie->title = $validated['title'];
+        $movie->genre_id = $validated['genre_id'];
+        $movie->release_date = $validated['release_date'];
+        $movie->rating = $validated['rating'] ?? null;
+        $movie->duration_min = $validated['duration_min'];
+        $movie->description = $validated['description'];
+        $movie->language = $validated['language'];
+        $movie->language_id = $validated['language_id'];
+        if(isset($path)){
+            $movie->poster_url = $path;
+        }
+        $movie->save(); //save menti el DB-be
+
+        return response()->json([
+            'message' => 'Film Updated',
+            'film_id' => $movie->id,
+        ], 204);
+ 
+    }
 }
