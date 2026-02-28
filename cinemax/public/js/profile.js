@@ -6,7 +6,7 @@
 async function initProfile() {
     const user = getCurrentUser();
     if (!user) {
-        window.location.href = 'login';
+        window.location.href = 'login.html';
         return;
     }
 

@@ -16,10 +16,11 @@ function fmtWhen(dateStr, timeStr) {
 async function initAdmin() {
     const user = getCurrentUser();
     if (!user) {
-        window.location.href = 'login';
+        window.location.href = 'login.html';
         return;
     }
 
+    console.log(user);
     if (typeof updateUserInterface === 'function') updateUserInterface();
 
     const adminSub = document.getElementById('adminSub');

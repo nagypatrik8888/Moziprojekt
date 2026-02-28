@@ -182,7 +182,7 @@ async function openBookingModal(movieId) {
     const currentUser = getCurrentUser();
     if (!currentUser) {
         showToast('Kérlek először jelentkezz be!', true);
-        setTimeout(() => window.location.href = 'login', 1000);
+        setTimeout(() => window.location.href = 'login.html', 1000);
         return;
     }
 

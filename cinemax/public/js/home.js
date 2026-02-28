@@ -49,7 +49,7 @@ async function loadFeaturedMovies() {
                             <span><i class="bi bi-clock"></i> ${movie.duration ? movie.duration + ' perc' : ''}</span>
                         </div>
                         <p class="text-muted small">${movie.description || ''}</p>
-                        <a href="movies?movie=${movie.movie_id}" class="btn btn-gold w-100 mt-2">
+                        <a href="movies.html?movie=${movie.movie_id}" class="btn btn-gold w-100 mt-2">
                             <i class="bi bi-ticket-perforated"></i> Jegyvásárlás
                         </a>
                     </div>
