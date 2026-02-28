@@ -13,6 +13,10 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens,HasFactory, Notifiable;
 
+    const USER_TYPE_SIMPLE = 'simple';
+    const USER_TYPE_ADMIN = 'admin';
+
+
     /**
      * The attributes that are mass assignable.
      *
@@ -49,6 +53,13 @@ class User extends Authenticatable
 
     public function is_admin(): bool 
     {
-        return $this->email === 'tesst@gmail.com';//TODO::kell db-be új oszlop hozzá amit nézünk
+        return $this->get_user_types()[$this->user_type] === self::USER_TYPE_ADMIN;
+    }
+
+    public function get_user_types() {
+        return [
+            1 => self::USER_TYPE_SIMPLE,
+            2 => self::USER_TYPE_ADMIN
+        ];
     }
 }

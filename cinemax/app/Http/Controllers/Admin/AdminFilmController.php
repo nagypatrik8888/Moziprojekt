@@ -30,6 +30,7 @@ class AdminFilmController extends Controller
                 'rating' => $movie->rating ?? null,
                 'duration_min' => $movie->duration_min ?? null,
                 'description' => $movie->description ?? null,
+                'poster_url' => $movie->poster_url,
             ];
         }
 
@@ -47,7 +48,7 @@ class AdminFilmController extends Controller
             'description' => ['required', 'string'],
             'language' => ['required', 'string'],
             'language_id' => ['required', 'integer', 'exists:languages,id'],
-            'poster_url' => ['required', 'string','url:http,https']
+            'poster' => ['required', 'mimes:jpg,png,jpeg,webp'] //validáljuk hogy milyen fajta file
 
         ]);
          if ($validator->fails()) {
@@ -55,6 +56,9 @@ class AdminFilmController extends Controller
         }
 
         $validated = $validator->valid();  //ellenorizzuk letezik e a screening
+
+        $file = $request->file('poster');
+        $path = '/storage/' . $file->storePublicly('uploads','public');
 
         $movie = new Movie();
         $movie->title = $validated['title'];
@@ -65,7 +69,7 @@ class AdminFilmController extends Controller
         $movie->description = $validated['description'];
         $movie->language = $validated['language'];
         $movie->language_id = $validated['language_id'];
-        $movie->poster_url = $validated['poster_url'];
+        $movie->poster_url = $path;
         $movie->save(); //save menti el DB-be
 
         return response()->json([

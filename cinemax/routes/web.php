@@ -13,7 +13,10 @@ use App\Http\Middleware\IsAdmin;
 use Illuminate\Http\Request;
 
 
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
+    if($request->wantsJson()){
+        return ['message' => 'Already authenticated','user'=>auth()->user()];
+    }
     return view('home');
 });
 
@@ -46,7 +49,7 @@ Route::get('/profile', function () {
 
 Route::prefix('api')->middleware([IsAdmin::class])->group(function () {
     Route::get('/user', function (Request $request) {
-        return $request->user();
+        return ['user'=> auth()->user()];
     })->middleware('auth:sanctum');
     Route::get('/movies', [MovieController::class, 'index']);
     Route::get('/movies/{movie_id}', [MovieController::class, 'show']); //letrehoztunk egy routeot ami fogad egy parametert, hogy a route celja hogy egy film adatait megjelenitsuk

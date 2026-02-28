@@ -16,4 +16,11 @@ class ExampleTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_movie_list_json() {
+        $response = $this->getJson('/api/movies');
+        $response->assertJsonStructure(['movies']);
+    }
+
+
 }
