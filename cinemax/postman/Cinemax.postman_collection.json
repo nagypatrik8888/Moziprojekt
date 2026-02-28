@@ -735,6 +735,119 @@
       "response": []
     },
     {
+      "name": "http://localhost:8888/api/admin/films/20",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{XSRF}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "multipart/form-data",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "Ezt updateljük",
+              "type": "text",
+              "uuid": "eb5a718e-6617-4714-a127-f20a6e6f5ab6"
+            },
+            {
+              "key": "genre_id",
+              "value": "2",
+              "type": "text",
+              "uuid": "45de7ac9-f894-4dfb-962d-72949e55cfd8"
+            },
+            {
+              "key": "release_date",
+              "value": "2007-01-22",
+              "type": "text",
+              "uuid": "7efa3016-da21-4513-aa9e-37f1242c763c"
+            },
+            {
+              "key": "rating",
+              "value": "3.5",
+              "type": "text",
+              "uuid": "612e5d2f-e1b4-4bca-a976-41814d75a0e2"
+            },
+            {
+              "key": "duration_min",
+              "value": "122",
+              "type": "text",
+              "uuid": "5ffbbc06-06b6-491c-808f-14e0965de561"
+            },
+            {
+              "key": "description",
+              "value": "asdfghj",
+              "type": "text",
+              "uuid": "60d78aca-3ead-467e-af65-ac09fca0fb0f"
+            },
+            {
+              "key": "language",
+              "value": "hun",
+              "type": "text",
+              "uuid": "c10cbcce-7fea-431f-90f1-68699b6d0536"
+            },
+            {
+              "key": "language_id",
+              "value": "1",
+              "type": "text",
+              "uuid": "c6215949-a94b-41a5-b2a2-fa32c6630275"
+            },
+            {
+              "key": "poster",
+              "type": "file",
+              "uuid": "7db9a6bd-0705-4f7a-89d3-d7aa9965d67f",
+              "src": "/D:/nagyp/School projects/hx/vizsgaremek/Moziprojekt/Moziprojekt Git/Moziprojekt/cinemax/Képernyőkép 2026-02-28 104126.png"
+            },
+            {
+              "key": "_method",
+              "value": "PUT",
+              "type": "text",
+              "uuid": "32c8620e-c863-4538-8b27-c8499fc3531a"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8888/api/admin/films/20",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "admin",
+            "films",
+            "20"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "http://localhost:8888/api/admin/users",
       "event": [
         {
