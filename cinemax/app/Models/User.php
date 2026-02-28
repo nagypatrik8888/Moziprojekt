@@ -62,4 +62,13 @@ class User extends Authenticatable
             2 => self::USER_TYPE_ADMIN
         ];
     }
+
+    public function get_data_for_frontend() {
+        return [
+            'id' => $this->id,
+            'name' =>  $this->name,
+            'email' => $this->email,
+            'is_admin' => $this->is_admin(),
+        ];
+    }
 }

@@ -14,13 +14,15 @@ function fmtWhen(dateStr, timeStr) {
 }
 
 async function initAdmin() {
-    const user = getCurrentUser();
-    if (!user) {
+    const userResponse = await apiGetCurrentUser();
+    if (!userResponse) {
         window.location.href = 'login';
         return;
     }
 
+    const user = userResponse.user;
     console.log(user);
+    
     if (typeof updateUserInterface === 'function') updateUserInterface();
 
     const adminSub = document.getElementById('adminSub');

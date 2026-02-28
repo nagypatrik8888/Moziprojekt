@@ -49,7 +49,7 @@ Route::get('/profile', function () {
 
 Route::prefix('api')->group(function () {
     Route::get('/user', function (Request $request) {
-        return ['user'=> auth()->user()];
+        return ['user'=> auth()->user()->get_data_for_frontend()];
     })->middleware('auth:sanctum');
     Route::get('/movies', [MovieController::class, 'index']);
     Route::get('/movies/{movie_id}', [MovieController::class, 'show']); //letrehoztunk egy routeot ami fogad egy parametert, hogy a route celja hogy egy film adatait megjelenitsuk
