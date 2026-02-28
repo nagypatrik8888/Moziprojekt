@@ -81,7 +81,7 @@ function updateUserInterface() {
             : 'BEJELENTKEZÉS';
     }
     if (linkEl) {
-        linkEl.href = user ? 'profile.html' : 'login.html';
+        linkEl.href = user ? 'profile' : 'login';
     }
 
     // Admin menüpont

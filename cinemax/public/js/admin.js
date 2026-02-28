@@ -16,7 +16,7 @@ function fmtWhen(dateStr, timeStr) {
 async function initAdmin() {
     const user = getCurrentUser();
     if (!user) {
-        window.location.href = 'login.html';
+        window.location.href = 'login';
         return;
     }
 

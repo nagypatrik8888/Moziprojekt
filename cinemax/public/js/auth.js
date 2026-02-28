@@ -54,7 +54,7 @@ function cmxSetNavbar() {
   }
 
   if (linkEl) {
-    linkEl.href = user ? "profile.html" : "login.html";
+    linkEl.href = user ? "profile" : "login";
   }
 
   
@@ -75,13 +75,13 @@ function cmxSetNavbar() {
 function cmxRequireAuth() {
   const user = cmxGetUser();
   if (!user) {
-    window.location.href = "login.html";
+    window.location.href = "login";
     return false;
   }
   return true;
 }
 
-function cmxLogout(redirectTo = "login.html") {
+function cmxLogout(redirectTo = "login") {
   CMX_KEYS_TO_CLEAR.forEach(k => localStorage.removeItem(k));
 
   try {
@@ -99,7 +99,7 @@ function cmxBindLogoutButtons() {
   document.querySelectorAll("[data-cmx-logout]").forEach(btn => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
-      cmxLogout("login.html");
+      cmxLogout("login");
     });
   });
 }
