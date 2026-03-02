@@ -64,7 +64,7 @@ class TicketOrdersController extends Controller
 
         $validator = Validator::make($request->all(), [ //validaljuk a bejovo adatokat, mind kotelezo, egesz szam
             'screening_id' => 'required|integer',
-            'seats.*.seat_id' => 'required',
+            'seats.*.seat_id' => 'required|integer',
             'seats.*.price_id' => 'required|integer',
         ]);
 
@@ -80,16 +80,8 @@ class TicketOrdersController extends Controller
 
         $total_price = 0; //ki kell számolni
         $erros = [];
-        $columns = ['A','B','C','D','E','F'];
         foreach($validated['seats'] as $seat) {
-            $columnLetter = $seat['seat_id'][0];
-            $columnLetterIndex = array_search($columnLetter,$columns) + 1;
-            //$seat['seat_id'] // B6
-            $seat_row = Seat::where([
-                ['column_num','=',$columnLetterIndex],
-                ['row_num','=',$seat['seat_id'][1]] 
-            ])->first();
-
+            $seat_row = Seat::where('id','=',$seat['seat_id'])->first();
             $price_row = Price::where('id','=',$seat['price_id'])->first();
             if(!$seat_row){
                 $erros[] = 'Seat was not found: ' . $seat['seat_id'];
@@ -98,7 +90,16 @@ class TicketOrdersController extends Controller
                 $erros[] = 'Price was not found: ' . $seat['price_id'];
             }
 
-            if(!$seat_row || !$price_row){
+            $ticketOrderSeatOccupied = TicketOrderSeat::where([
+                ['screening_id','=',$validated['screening_id']],
+                ['seat_id','=',$seat_row->id]
+            ])->exists();
+
+            if($ticketOrderSeatOccupied){
+                $erros[] = 'Seat occupied';
+            }
+
+            if(!$seat_row || !$price_row || $ticketOrderSeatOccupied){
                 continue;
             }
 
@@ -109,9 +110,6 @@ class TicketOrdersController extends Controller
         if(!empty($erros)){
             return response()->json(['errors'=> $erros]);
         }
-
-        //dd($total_price,$validated,$screening_row);
-
 
         $ticket_order_row = TicketOrder::create([
             'user_id' => 12, //ezt ki kell cserélni majd bejelentkezett felhasználó id-ra 
@@ -125,16 +123,8 @@ class TicketOrdersController extends Controller
         $ticket_order_row->save();
 
         foreach($validated['seats'] as $seat) {
-            $columnLetter = $seat['seat_id'][0];
-            $columnLetterIndex = array_search($columnLetter,$columns) + 1;
-            //$seat['seat_id'] // B6
-            $seat_row = Seat::where([
-                ['column_num','=',$columnLetterIndex],
-                ['row_num','=',$seat['seat_id'][1]] 
-            ])->first();
-
             $seat_row = TicketOrderSeat::create([
-                'seat_id' => $seat_row->id,
+                'seat_id' => $seat['seat_id'],
                 //'price_id' => $seat['price_id'],
                 'screening_id' => $validated['screening_id'],//ezt az oszlopot db-ből ki kell törölni
                 'ticket_order_id' => $ticket_order_row->id

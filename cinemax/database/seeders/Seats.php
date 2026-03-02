@@ -18,7 +18,7 @@ class Seats extends Seeder
 
         foreach ($roomIds as $roomId) {
             for ($row = 1; $row <= 10; $row++) {
-                for ($col = 1; $col <= 6; $col++) {
+                for ($col = 1; $col <= 10; $col++) {
                     $exists = DB::table('seats')
                         ->where('room_id', $roomId)
                         ->where('row_num', $row)
