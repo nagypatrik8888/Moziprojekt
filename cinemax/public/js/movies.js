@@ -239,9 +239,11 @@ async function openBookingModal(movieId) {
         const seatsArea = document.getElementById('seatsArea');
         seatsArea.onclick = (e) => {
             const seatEl = e.target.closest('.seat[data-seat-id]');
+            console.log(seatEl);
             if (!seatEl || seatEl.classList.contains('occupied')) return;
 
-            const seatId = Number(seatEl.dataset.seatId);
+            const seatId = seatEl.dataset.seatId;
+            console.log(seatId);
             const idx = bookingState.selectedSeats.findIndex(s => s.seat_id === seatId);
 
             if (idx > -1) {
@@ -333,9 +335,11 @@ function renderTicketTypes() {
     `).join('');
 
     section.querySelectorAll('.ticket-plus').forEach(btn => {
+        console.log('tst');
         btn.onclick = () => {
             const key = btn.dataset.type;
             bookingState.ticketCounts[key] = (bookingState.ticketCounts[key] || 0) + 1;
+            console.log('test');
             enforceSeatCount();
             updateTicketUI();
             renderSeatsForBooking();

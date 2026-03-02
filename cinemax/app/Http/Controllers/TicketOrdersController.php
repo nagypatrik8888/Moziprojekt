@@ -64,7 +64,7 @@ class TicketOrdersController extends Controller
 
         $validator = Validator::make($request->all(), [ //validaljuk a bejovo adatokat, mind kotelezo, egesz szam
             'screening_id' => 'required|integer',
-            'seats.*.seat_id' => 'required|integer',
+            'seats.*.seat_id' => 'required',
             'seats.*.price_id' => 'required|integer',
         ]);
 
@@ -80,8 +80,16 @@ class TicketOrdersController extends Controller
 
         $total_price = 0; //ki kell számolni
         $erros = [];
+        $columns = ['A','B','C','D','E','F'];
         foreach($validated['seats'] as $seat) {
-            $seat_row = Seat::where('id','=',$seat['seat_id'])->first();
+            $columnLetter = $seat['seat_id'][0];
+            $columnLetterIndex = array_search($columnLetter,$columns) + 1;
+            //$seat['seat_id'] // B6
+            $seat_row = Seat::where([
+                ['column_num','=',$columnLetterIndex],
+                ['row_num','=',$seat['seat_id'][1]] 
+            ])->first();
+
             $price_row = Price::where('id','=',$seat['price_id'])->first();
             if(!$seat_row){
                 $erros[] = 'Seat was not found: ' . $seat['seat_id'];
@@ -117,8 +125,16 @@ class TicketOrdersController extends Controller
         $ticket_order_row->save();
 
         foreach($validated['seats'] as $seat) {
+            $columnLetter = $seat['seat_id'][0];
+            $columnLetterIndex = array_search($columnLetter,$columns) + 1;
+            //$seat['seat_id'] // B6
+            $seat_row = Seat::where([
+                ['column_num','=',$columnLetterIndex],
+                ['row_num','=',$seat['seat_id'][1]] 
+            ])->first();
+
             $seat_row = TicketOrderSeat::create([
-                'seat_id' => $seat['seat_id'],
+                'seat_id' => $seat_row->id,
                 //'price_id' => $seat['price_id'],
                 'screening_id' => $validated['screening_id'],//ezt az oszlopot db-ből ki kell törölni
                 'ticket_order_id' => $ticket_order_row->id

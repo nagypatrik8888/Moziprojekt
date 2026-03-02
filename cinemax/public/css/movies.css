@@ -302,3 +302,31 @@
 .movie-card i {
     color: #fbbf24;      /* ikonok arany */
 }
+/* ===== FIX: Ticket + / - gombok nem kattinthatók ===== */
+
+/* Biztosítsuk, hogy a ticket section ne legyen takarva */
+#ticketSection {
+    position: relative;
+    z-index: 5;
+}
+
+/* Plusz és mínusz gombok mindig kattinthatók legyenek */
+.ticket-plus,
+.ticket-minus {
+    position: relative;
+    z-index: 10;
+    pointer-events: auto !important;
+}
+
+/* Modal content fölé ne üljön rá semmi */
+.modal-body {
+    position: relative;
+    z-index: 1;
+}
+
+/* Ha bármi absolute elem ráülne */
+.seat-grid,
+#seatsArea {
+    position: relative;
+    z-index: 1;
+}

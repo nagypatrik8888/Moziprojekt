@@ -85,6 +85,10 @@
                             </div>
 
                             <div class="mb-3">
+                                <div id="ticketSection"></div>
+                            </div>
+
+                            <div class="mb-3">
                                 <label class="form-label">Jegytípusok</label>
 
                                 <div class="ticket-row">
