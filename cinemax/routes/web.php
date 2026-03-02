@@ -11,7 +11,10 @@ use App\Http\Controllers\ProfileTicketOrdersController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdmin;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\Admin\AdminLanguageController;
+use App\Http\Controllers\Admin\AdminGenreController;
+use App\Http\Controllers\Admin\AdminPriceController;
+use App\Http\Controllers\Admin\AdminRoomController;
 
 Route::get('/', function (Request $request) {
     if($request->wantsJson()){
@@ -69,6 +72,22 @@ Route::prefix('api')->group(function () {
 
         Route::get('/screenings', [AdminScreeningController::class, 'index']);
         Route::post('/screenings', [AdminScreeningController::class, 'store']);
+
+        Route::get('/languages', [AdminLanguageController::class, 'index']);
+        Route::post('/languages', [AdminLanguageController::class, 'store']);
+        Route::put('/languages/{language_id}', [AdminLanguageController::class, 'update']);
+
+        Route::get('/genre', [AdminGenreController::class, 'index']);
+        Route::post('/genre', [AdminGenreController::class, 'store']);
+        Route::put('/genre/{genre_id}', [AdminGenreController::class, 'update']);
+
+        Route::get('/prices', [AdminPriceController::class, 'index']);
+        Route::post('/prices', [AdminPriceController::class, 'store']);
+        Route::put('/prices/{price_id}', [AdminPriceController::class, 'update']);
+
+        Route::get('/rooms', [AdminRoomController::class, 'index']);
+        Route::post('/rooms', [AdminRoomController::class, 'store']);
+        Route::put('/rooms/{room_id}', [AdminRoomController::class, 'update']);
     }); //TODO::admin role
 
 });
