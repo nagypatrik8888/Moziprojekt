@@ -112,7 +112,7 @@ class TicketOrdersController extends Controller
         }
 
         $ticket_order_row = TicketOrder::create([
-            'user_id' => 12, //ezt ki kell cserélni majd bejelentkezett felhasználó id-ra 
+            'user_id' => auth()->user()->id, //ezt ki kell cserélni majd bejelentkezett felhasználó id-ra 
             'ticket_id' => 9, //ezt az oszlopot db-ből ki kell törölni
             'quantity' => 1, //ezt az oszlopot db-ből ki kell törölni
             'seat_id' => null,//ezt az oszlopot db-ből ki kell törölni
