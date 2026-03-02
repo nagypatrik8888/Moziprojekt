@@ -8,6 +8,7 @@ use App\Models\Movie; //???
 use Illuminate\Http\Request;
 use App\Models\Price;
 use App\Models\Genre;
+use Carbon\Carbon;
 
 class MovieController extends Controller //extends
 {
@@ -100,7 +101,7 @@ class MovieController extends Controller //extends
 
                 $screening_data_for_frontend=[
                     'screening_id'=>$screening->id,
-                    'start_time'=>$screening->start_time,
+                    'start_time'=>Carbon::createFromFormat('H:i:s.u',$screening->start_time)->format('H:i'),
                     'start_date'=>$screening->screening_date,
                     'room'=>[],
                     
