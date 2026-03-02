@@ -152,4 +152,4 @@ async function renderBookings() {
 }
 
 document.addEventListener('DOMContentLoaded', renderBookings);
-window.addEventListener('pageshow', renderBookings);
+//window.addEventListener('pageshow', renderBookings);
