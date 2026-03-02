@@ -228,8 +228,79 @@
           "listen": "test",
           "script": {
             "exec": [
-              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
-              ""
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));",
+              "",
+              "pm.test(\"Status code is 200\", () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response time is under 1000ms\", () => {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});",
+              "",
+              "pm.test(\"Content-Type is application/json\", () => {",
+              "    pm.response.to.have.header(\"Content-Type\");",
+              "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+              "});",
+              "",
+              "pm.test(\"Response is valid JSON and has movie object\", () => {",
+              "    pm.expect(() => pm.response.json()).to.not.throw();",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.be.an(\"object\");",
+              "    pm.expect(json).to.have.property(\"movie\");",
+              "    pm.expect(json.movie).to.be.an(\"object\");",
+              "});",
+              "",
+              "pm.test(\"Movie required fields exist and types are correct\", () => {",
+              "    const movie = pm.response.json().movie;",
+              "    pm.expect(movie).to.have.property(\"title\").that.is.a(\"string\");",
+              "    pm.expect(movie).to.have.property(\"movie_id\").that.is.a(\"number\");",
+              "    pm.expect(movie).to.have.property(\"genre_name\").that.is.a(\"string\");",
+              "    pm.expect(movie).to.have.property(\"release_date\").that.is.a(\"string\");",
+              "    pm.expect(movie).to.have.property(\"rating\").that.is.a(\"number\");",
+              "    pm.expect(movie.rating, \"rating between 0 and 10\").to.be.within(0, 10);",
+              "    pm.expect(movie).to.have.property(\"duration\").that.is.a(\"number\");",
+              "    pm.expect(movie.duration, \"duration must be > 0\").to.be.above(0);",
+              "    pm.expect(movie).to.have.property(\"description\").that.is.a(\"string\");",
+              "});",
+              "",
+              "pm.test(\"Screenings structure is valid\", () => {",
+              "    const movie = pm.response.json().movie;",
+              "    pm.expect(movie).to.have.property(\"screenings\");",
+              "    pm.expect(movie.screenings).to.be.an(\"array\");",
+              "    movie.screenings.forEach((s, i) => {",
+              "        pm.expect(s).to.have.property(\"screening_id\").that.is.a(\"number\");",
+              "        pm.expect(s).to.have.property(\"start_time\").that.is.a(\"string\");",
+              "        pm.expect(s).to.have.property(\"start_date\").that.is.a(\"string\");",
+              "        pm.expect(s).to.have.property(\"room\").that.is.an(\"object\");",
+              "        const room = s.room;",
+              "        pm.expect(room).to.have.property(\"screen_size\").that.is.a(\"string\");",
+              "        pm.expect(room).to.have.property(\"seats\").that.is.an(\"array\");",
+              "        room.seats.forEach((seat, j) => {",
+              "            pm.expect(seat).to.have.property(\"seat_id\").that.is.a(\"number\");",
+              "            pm.expect(seat).to.have.property(\"row\").that.is.a(\"number\");",
+              "            pm.expect(seat).to.have.property(\"column\").that.is.a(\"number\");",
+              "        });",
+              "    });",
+              "});",
+              "",
+              "pm.test(\"Prices array contains valid entries\", () => {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.have.property(\"prices\");",
+              "    pm.expect(json.prices).to.be.an(\"array\").that.is.not.empty;",
+              "    json.prices.forEach((p) => {",
+              "        pm.expect(p).to.have.property(\"price\").that.satisfy(val => {",
+              "            const num = (typeof val === \"string\") ? parseFloat(val) : val;",
+              "            return !isNaN(num);",
+              "        }, \"price should parse to a number\");",
+              "        pm.expect(p).to.have.property(\"price_type\").that.is.a(\"string\");",
+              "    });",
+              "});",
+              "",
+              "pm.test(\"Top-level response schema sanity check\", () => {",
+              "    const json = pm.response.json();",
+              "    pm.expect(Object.keys(json)).to.include.members([\"movie\",\"prices\"]);",
+              "});"
             ],
             "type": "text/javascript",
             "packages": {},
@@ -982,6 +1053,152 @@
             "api",
             "admin",
             "screenings"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/admin/rooms",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{XSRF}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "film_id",
+              "value": "17",
+              "type": "text",
+              "uuid": "99a0ceec-4802-45d9-a17b-d677e0b71c90"
+            },
+            {
+              "key": "room_id",
+              "value": "4",
+              "type": "text",
+              "uuid": "bd98bfff-75bb-4b24-a8a3-87368503be98"
+            },
+            {
+              "key": "screening_date",
+              "value": "1111-11-11",
+              "type": "text",
+              "uuid": "139ac3a5-67ac-40e7-a570-903af07dacae"
+            },
+            {
+              "key": "start_time",
+              "value": "00:00:00",
+              "type": "text",
+              "uuid": "1c202859-6936-416d-8ca2-59cb9134bdca"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8888/api/admin/rooms",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "admin",
+            "rooms"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8888/api/admin/rooms",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set('XSRF', decodeURIComponent(pm.cookies.get('XSRF-TOKEN')));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{XSRF}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "film_id",
+              "value": "17",
+              "type": "text",
+              "uuid": "99a0ceec-4802-45d9-a17b-d677e0b71c90"
+            },
+            {
+              "key": "room_id",
+              "value": "4",
+              "type": "text",
+              "uuid": "bd98bfff-75bb-4b24-a8a3-87368503be98"
+            },
+            {
+              "key": "screening_date",
+              "value": "1111-11-11",
+              "type": "text",
+              "uuid": "139ac3a5-67ac-40e7-a570-903af07dacae"
+            },
+            {
+              "key": "start_time",
+              "value": "00:00:00",
+              "type": "text",
+              "uuid": "1c202859-6936-416d-8ca2-59cb9134bdca"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8888/api/admin/rooms",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "admin",
+            "rooms"
           ]
         }
       },
