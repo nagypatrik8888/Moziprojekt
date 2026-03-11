@@ -91,7 +91,7 @@
           <div class="cmx-card p-3 h-100">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
               <div class="fw-black fs-5">Filmek kezelése</div>
-              <button class="btn btn-cmx-gold px-3" id="btnAddMovie"><i class="bi bi-plus-circle"></i> Új film</button>
+              <a class="btn btn-cmx-gold px-3" href="/admin/movies/create"><i class="bi bi-plus-circle"></i> Új film</a>
             </div>
 
             <div class="table-responsive mt-3">

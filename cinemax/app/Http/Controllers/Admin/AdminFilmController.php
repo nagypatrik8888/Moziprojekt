@@ -52,7 +52,10 @@ class AdminFilmController extends Controller
 
         ]);
          if ($validator->fails()) {
-            return response()->json($validator->errors()); //ha fail json error
+            if($request->wantsJson()){
+                return response()->json($validator->errors()); //ha fail json error
+            }
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $validated = $validator->valid();  //ellenorizzuk letezik e a screening
@@ -72,10 +75,14 @@ class AdminFilmController extends Controller
         $movie->poster_url = $path;
         $movie->save(); //save menti el DB-be
 
-        return response()->json([
-            'message' => 'Film created',
-            'film_id' => $movie->id,
-        ], 201);
+        if($request->wantsJson()){
+            return response()->json([
+                'message' => 'Film created',
+                'film_id' => $movie->id,
+            ], 201);
+        }
+
+        return redirect('/admin');
     }
 
     public function update(int $movie_id,Request $request) {

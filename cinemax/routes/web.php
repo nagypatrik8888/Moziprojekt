@@ -48,6 +48,11 @@ Route::get('/profile', function () {
     return view('profile');
 })->middleware(['auth']);
 
+Route::get('/admin/movies/create', function () {
+    return view('admin.movies.create');
+})->middleware(['auth']);
+
+Route::post('/admin/movies',[AdminFilmController::class, 'store'])->middleware(['auth']);
 
 
 Route::prefix('api')->group(function () {
