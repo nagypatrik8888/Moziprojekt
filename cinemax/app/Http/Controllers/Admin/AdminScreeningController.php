@@ -59,7 +59,10 @@ class AdminScreeningController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors()); //ha fail json error
+            if($request->wantsJson()){
+                return response()->json($validator->errors()); //ha fail json error
+            }
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $validated = $validator->valid();  //ellenorizzuk letezik e a screening
@@ -70,10 +73,13 @@ class AdminScreeningController extends Controller
         $screening->screening_date = $validated['screening_date'];
         $screening->start_time = $validated['start_time'];
         $screening->save();
-
-        return response()->json([
-            'message' => 'Screening created',
+         if($request->wantsJson()){
+            return response()->json([
+                'message' => 'Screening created',
             'screening_id' => $screening->id,
-        ], 201);
+            ], 201);
+        }
+
+        return redirect('/admin');
     }
 }

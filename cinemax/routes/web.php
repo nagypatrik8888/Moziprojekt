@@ -17,8 +17,8 @@ use App\Http\Controllers\Admin\AdminPriceController;
 use App\Http\Controllers\Admin\AdminRoomController;
 
 Route::get('/', function (Request $request) {
-    if($request->wantsJson()){
-        return ['message' => 'Already authenticated','user'=>auth()->user()];
+    if ($request->wantsJson()) {
+        return ['message' => 'Already authenticated', 'user' => auth()->user()];
     }
     return view('home');
 });
@@ -52,12 +52,17 @@ Route::get('/admin/movies/create', function () {
     return view('admin.movies.create');
 })->middleware(['auth']);
 
-Route::post('/admin/movies',[AdminFilmController::class, 'store'])->middleware(['auth']);
+Route::post('/admin/movies', [AdminFilmController::class, 'store'])->middleware(['auth']);
 
+Route::get('/admin/screenings/create', function () {
+            return view('admin.screenings.create');
+        })->middleware(['auth']);
+
+        Route::post('/admin/screenings',[AdminScreeningController::class, 'store'])->middleware(['auth']);
 
 Route::prefix('api')->group(function () {
     Route::get('/user', function (Request $request) {
-        return ['user'=> auth()->user()->get_data_for_frontend()];
+        return ['user' => auth()->user()->get_data_for_frontend()];
     })->middleware('auth:sanctum');
     Route::get('/movies', [MovieController::class, 'index']);
     Route::get('/movies/{movie_id}', [MovieController::class, 'show']); //letrehoztunk egy routeot ami fogad egy parametert, hogy a route celja hogy egy film adatait megjelenitsuk

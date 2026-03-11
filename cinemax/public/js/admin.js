@@ -13,11 +13,20 @@ function fmtWhen(dateStr, timeStr) {
     return `${dateStr} ${timeStr || ''}`.trim();
 }
 
+let tryCount = 5;
+
 async function initAdmin() {
     const userResponse = await apiGetCurrentUser();
     if (!userResponse) {
-        window.location.href = 'login';
-        return;
+        if(tryCount > 0){
+            tryCount--;
+            setTimeout(()=>{
+                return initAdmin();
+            },150);
+        }else {
+            window.location.href = 'login';
+            return;   
+        }
     }
 
     const user = userResponse.user;
