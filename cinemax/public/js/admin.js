@@ -23,6 +23,8 @@ async function initAdmin() {
             setTimeout(()=>{
                 return initAdmin();
             },150);
+
+            return;
         }else {
             window.location.href = 'login';
             return;   
@@ -131,6 +133,9 @@ function renderAdminFilms() {
             <td>⭐ ${m.rating ?? ''}</td>
             <td>
                 <span class="text-muted small">${m.duration_min ? m.duration_min + ' perc' : ''}</span>
+            </td>
+            <td>
+                <a href="/admin/movies/${m.film_id ?? ''}">Szerkesztés</a>
             </td>
         </tr>
     `).join('');

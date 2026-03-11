@@ -48,17 +48,20 @@ Route::get('/profile', function () {
     return view('profile');
 })->middleware(['auth']);
 
-Route::get('/admin/movies/create', function () {
-    return view('admin.movies.create');
-})->middleware(['auth']);
+Route::prefix('/admin')->middleware([IsAdmin::class])->group(function () {
+    Route::get('/movies/create',  [AdminFilmController::class, 'create_form']);
+    Route::get('/movies/{movie_id}', [AdminFilmController::class, 'update_form']);
+    Route::post('/movies', [AdminFilmController::class, 'store']);
+    Route::put('/movies/{movie_id}', [AdminFilmController::class, 'update']);
+    //rooms,users,ticket_orders,screening/update vissza van
 
-Route::post('/admin/movies', [AdminFilmController::class, 'store'])->middleware(['auth']);
+    Route::get('/screenings/create', function () {
+        return view('admin.screenings.create');
+    });
 
-Route::get('/admin/screenings/create', function () {
-            return view('admin.screenings.create');
-        })->middleware(['auth']);
+    Route::post('/screenings', [AdminScreeningController::class, 'store']);
+});
 
-        Route::post('/admin/screenings',[AdminScreeningController::class, 'store'])->middleware(['auth']);
 
 Route::prefix('api')->group(function () {
     Route::get('/user', function (Request $request) {

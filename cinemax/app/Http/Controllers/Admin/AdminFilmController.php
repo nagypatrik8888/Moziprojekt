@@ -37,6 +37,23 @@ class AdminFilmController extends Controller
         return response()->json($response);
     }
 
+    public function create_form()
+    {
+        return view('admin.movies.form', [
+            'movie' => new Movie(),
+            'mode' => 'create',
+        ]);
+    }
+
+    public function update_form($movie_id)
+    {
+        $movie = Movie::findOrFail($movie_id);
+        return view('admin.movies.form', [
+            'movie' => $movie,
+            'mode' => 'edit',
+        ]);
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -51,8 +68,8 @@ class AdminFilmController extends Controller
             'poster' => ['required', 'mimes:jpg,png,jpeg,webp'] //validáljuk hogy milyen fajta file
 
         ]);
-         if ($validator->fails()) {
-            if($request->wantsJson()){
+        if ($validator->fails()) {
+            if ($request->wantsJson()) {
                 return response()->json($validator->errors()); //ha fail json error
             }
             return redirect()->back()->withErrors($validator)->withInput();
@@ -61,7 +78,7 @@ class AdminFilmController extends Controller
         $validated = $validator->valid();  //ellenorizzuk letezik e a screening
 
         $file = $request->file('poster');
-        $path = '/storage/' . $file->storePublicly('uploads','public');
+        $path = '/storage/' . $file->storePublicly('uploads', 'public');
 
         $movie = new Movie();
         $movie->title = $validated['title'];
@@ -75,7 +92,7 @@ class AdminFilmController extends Controller
         $movie->poster_url = $path;
         $movie->save(); //save menti el DB-be
 
-        if($request->wantsJson()){
+        if ($request->wantsJson()) {
             return response()->json([
                 'message' => 'Film created',
                 'film_id' => $movie->id,
@@ -85,8 +102,9 @@ class AdminFilmController extends Controller
         return redirect('/admin');
     }
 
-    public function update(int $movie_id,Request $request) {
-         $validator = Validator::make($request->all(), [
+    public function update(int $movie_id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'title' => ['required', 'string', 'max:255'],
             'genre_id' => ['required', 'integer', 'exists:genres,id'],
             'release_date' => ['required', 'date'],
@@ -98,15 +116,19 @@ class AdminFilmController extends Controller
             'poster' => ['mimes:jpg,png,jpeg,webp'] //validáljuk hogy milyen fajta file
 
         ]);
-         if ($validator->fails()) {
-            return response()->json($validator->errors()); //ha fail json error
+        if ($validator->fails()) {
+            if ($request->wantsJson()) {
+                return response()->json($validator->errors(), 422);
+            }
+
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $validated = $validator->valid();  //ellenorizzuk letezik e a screening
 
         $file = $request->file('poster');
-        if($file){
-            $path = '/storage/' . $file->storePublicly('uploads','public');
+        if ($file) {
+            $path = '/storage/' . $file->storePublicly('uploads', 'public');
         }
 
         $movie = Movie::find($movie_id);
@@ -118,15 +140,18 @@ class AdminFilmController extends Controller
         $movie->description = $validated['description'];
         $movie->language = $validated['language'];
         $movie->language_id = $validated['language_id'];
-        if(isset($path)){
+        if (isset($path)) {
             $movie->poster_url = $path;
         }
         $movie->save(); //save menti el DB-be
 
-        return response()->json([
-            'message' => 'Film Updated',
-            'film_id' => $movie->id,
-        ], 204);
- 
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Film Updated',
+                'film_id' => $movie->id,
+            ], 201);
+        }
+
+        return redirect('/admin');
     }
 }
