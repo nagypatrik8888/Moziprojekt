@@ -1,0 +1,237 @@
+:root {
+    --primary-gold: #fbbf24;
+    --primary-orange: #f59e0b;
+    --dark-bg: #0a0a0a;
+    --card-bg: rgba(31, 41, 55, 0.8);
+}
+
+* {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+    color: #fff;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar {
+    background: rgba(10, 10, 10, 0.95) !important;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.navbar-toggler {
+    border: 2px solid var(--primary-gold);
+    padding: 0.5rem 0.75rem;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.25rem rgba(251, 191, 36, 0.25);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(251, 191, 36, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar-brand {
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary-gold), var(--primary-orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-gold);
+    transition: width 0.3s;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.nav-link:hover {
+    color: var(--primary-gold) !important;
+}
+
+/* Buttons */
+.btn-gold {
+    background: linear-gradient(135deg, var(--primary-gold), var(--primary-orange));
+    color: #000;
+    font-weight: 700;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: clamp(0.85rem, 2vw, 1rem);
+}
+
+@media (max-width: 576px) {
+    .btn-gold {
+        padding: 0.65rem 1.25rem;
+    }
+}
+
+.btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(251, 191, 36, 0.5);
+    color: #000;
+}
+
+.btn-outline-gold {
+    border: 2px solid var(--primary-gold);
+    color: var(--primary-gold);
+    font-weight: 700;
+    border-radius: 50px;
+    transition: all 0.3s;
+}
+
+.btn-outline-gold:hover {
+    background: var(--primary-gold);
+    color: #000;
+}
+
+/* Section Title */
+.section-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary-gold), var(--primary-orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 3rem;
+}
+
+/* Forms */
+.form-control, .form-select {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+}
+
+.form-control:focus, .form-select:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary-gold);
+    color: #fff;
+    box-shadow: 0 0 0 0.25rem rgba(251, 191, 36, 0.25);
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.form-select option {
+    background: #1a1a2e;
+    color: #fff;
+}
+
+.form-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+/* Toast */
+.toast {
+    background: linear-gradient(135deg, var(--primary-gold), var(--primary-orange));
+    color: #000;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.toast.error {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+}
+
+.toast-header {
+    background: transparent;
+    border: none;
+    color: inherit;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .navbar-collapse {
+        background: rgba(10, 10, 10, 0.98);
+        padding: 1rem;
+        margin-top: 1rem;
+        border-radius: 15px;
+        border: 1px solid rgba(251, 191, 36, 0.2);
+    }
+
+    .nav-link {
+        padding: 0.75rem 1rem !important;
+        margin: 0.25rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-link:last-child {
+        border-bottom: none;
+    }
+}
+/* === SZÖVEGEK LÁTHATÓSÁGA FIX === */
+
+/* Alap szöveg */
+body,
+p,
+span,
+li,
+small,
+label,
+.text-muted,
+.text-secondary {
+    color: #ffffff !important;
+}
+
+/* Címsorok */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff !important;
+}
+
+/* Linkek */
+a {
+    color: #ffffff;
+}
+
+a:hover {
+    color: #fbbf24; /* arany hover marad */
+}
+
+/* Bootstrap leíró szövegek */
+.lead,
+.card-text {
+    color: #ffffff !important;
+}
+
+/* Idézet / dőlt szöveg */
+.fst-italic {
+    color: #e5e7eb !important;
+}

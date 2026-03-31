@@ -1,0 +1,47 @@
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(17,24,39,0.9);
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.login-icon {
+    font-size: 3rem;
+    color: #fbbf24;
+}
+
+.login-title {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.password-strength {
+    width: 100%;
+}
+
+.strength-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.strength-fill {
+    height: 100%;
+    width: 0%;
+    transition: 0.3s;
+}
+
+.strength-weak { background: #ef4444; }
+.strength-medium { background: #f59e0b; }
+.strength-strong { background: #22c55e; }

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rólunk - Cinemax</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css">
+    <!-- Közös CSS -->
+    <link rel="stylesheet" href="css/common.css">
+    <!-- About CSS -->
+    <link rel="stylesheet" href="css/about.css">
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">
+            <i class="bi bi-film"></i> CINEMAX
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Főoldal</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="movies.html">Filmek</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="about.html">Rólunk</a>
+                </li>
+                <li class="nav-item ms-3">
+                    <a href="login.html" class="btn btn-outline-gold" id="loginBtn">
+                        <i class="bi bi-person"></i> Bejelentkezés
+                    </a>
+                    <a href="profile.html" class="btn btn-gold" id="userBtn" style="display:none;">
+                        <i class="bi bi-person-circle"></i> <span id="userName"></span>
+                    </a>
+                </li>
+            
+          <li class="nav-item" id="navAdminItem" style="display:none;"><a class="nav-link text-white-50 fw-bold" href="admin.html">ADMIN</a></li>
+</ul>
+        </div>
+    </div>
+</nav>
+
+<!-- About Container -->
+<div class="about-container">
+    <div class="container py-5">
+        <h1 class="section-title text-center mb-5">Rólunk</h1>
+
+        <!-- Intro -->
+        <div class="card bg-dark border-0 mb-5 p-4 about-hero">
+            <div class="card-body">
+                <h2 class="section-title h3 mb-3">Cinemax – 3 éve veletek</h2>
+                <p class="lead mb-3">
+                    A Cinemax 2022 óta működik Magyarországon, és mára az ország egyik legkedveltebb moziélményévé vált.
+                </p>
+                <p class="mb-2">
+                    Pécsi központunkban 5 modern termünkben várunk – kényelmes fotelekkel, Dolby hanggal, és igazi “mozis” hangulattal.
+                </p>
+                <p class="mb-0">
+                    Küldetésünk: <strong>egy kicsit kiszakítani a hétköznapokból</strong>, és olyan élményt adni, amire jó emlékezni.
+                </p>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-number">2+</div>
+                    <div class="stat-label">Év tapasztalat</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-number">200E+</div>
+                    <div class="stat-label">Elégedett néző</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-number">300+</div>
+                    <div class="stat-label">Film évente</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services / Highlights -->
+        <div class="row g-4 mb-5">
+            <div class="col-12">
+                <h2 class="section-title h4 mb-3">Amiért szeretni fogod</h2>
+                <p class="text-muted mb-0">Kis extrák, amiktől tényleg “Cinemax” élmény lesz az este.</p>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-speaker"></i></div>
+                    <h3 class="h5 fw-bold mb-2">Prémium hangzás</h3>
+                    <p class="text-muted mb-0">Dolby élmény – tiszta párbeszéd, ütős basszus, valódi mozis atmoszféra.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-cup-straw"></i></div>
+                    <h3 class="h5 fw-bold mb-2">Snack & chill</h3>
+                    <p class="text-muted mb-0">Popcorn, nachos, üdítők – és pár “titkos” szezonális különlegesség.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-stars"></i></div>
+                    <h3 class="h5 fw-bold mb-2">VIP feeling</h3>
+                    <p class="text-muted mb-0">Extra kényelmes ülések, több lábtér, és nyugisabb teremhangulat.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact + Map -->
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <div class="contact-card">
+                    <h2 class="section-title h4 mb-3">Kapcsolat</h2>
+
+                    <div class="contact-item">
+                        <div class="contact-badge"><i class="bi bi-geo-alt"></i></div>
+                        <div>
+                            <div class="fw-bold">Cím</div>
+                            <div class="text-muted">7621 Pécs, Király utca 12.</div>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-badge"><i class="bi bi-telephone"></i></div>
+                        <div>
+                            <div class="fw-bold">Telefonszám</div>
+                            <a class="contact-link" href="tel:+3672555123">+36 72 555 123</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-badge"><i class="bi bi-envelope"></i></div>
+                        <div>
+                            <div class="fw-bold">Email</div>
+                            <a class="contact-link" href="mailto:info@cinemax.hu">info@cinemax.hu</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-badge"><i class="bi bi-clock"></i></div>
+                        <div>
+                            <div class="fw-bold">Nyitvatartás</div>
+                            <div class="text-muted">H–P: 10:00–21:00</div>
+                            <div class="text-muted">Szo–V: 10:00–00:00</div>
+                        </div>
+                    </div>
+
+                    <hr class="contact-sep">
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <a class="btn btn-gold" target="_blank" rel="noopener"
+                           href="https://www.google.com/maps?q=7621%20P%C3%A9cs%20Kir%C3%A1ly%20utca%2012&z=16">
+                            <i class="bi bi-map"></i> Megnyitás Google Térképen
+                        </a>
+
+                        <a class="btn btn-outline-gold" href="movies.html">
+                            <i class="bi bi-ticket-perforated"></i> Jegyvásárlás
+                        </a>
+                    </div>
+
+                    <div class="social-row mt-4">
+                        <a class="social-btn" href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                        <a class="social-btn" href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                        <a class="social-btn" href="#" aria-label="TikTok"><i class="bi bi-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="map-card">
+                    <div class="map-header">
+                        <div>
+                            <div class="fw-bold">Hol találsz meg minket?</div>
+                            <div class="text-muted small">Pécs belváros, könnyű megközelítés</div>
+                        </div>
+                        <span class="map-pill"><i class="bi bi-geo"></i> Pécs</span>
+                    </div>
+
+                    <div class="map-embed">
+                        <iframe
+                            title="Cinemax Pécs térkép"
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            src="https://www.google.com/maps?q=7621%20P%C3%A9cs%20Kir%C3%A1ly%20utca%2012&z=16&output=embed">
+                        </iframe>
+                    </div>
+
+                    <div class="map-footer">
+                        <div class="text-muted small">
+                            Tipp: ha autóval jössz, a belvárosi parkolók 5–10 perc sétára vannak.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Extra small section -->
+        <div class="card bg-dark border-0 mt-5 p-4 about-extra">
+            <div class="card-body">
+                <h2 class="section-title h4 mb-3">Apró plusz, amitől jobb lesz az este</h2>
+                <ul class="about-list mb-0">
+                    <li><i class="bi bi-check2-circle"></i> Online jegyvásárlás és ülésválasztás</li>
+                    <li><i class="bi bi-check2-circle"></i> Kedvencek mentése, gyors foglalás</li>
+                    <li><i class="bi bi-check2-circle"></i> Diák / nyugdíjas / fogyatékos jegytípusok</li>
+                    <li><i class="bi bi-check2-circle"></i> Kényelmes, átlátható felület – mobilon is</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast" role="alert">
+        <div class="toast-body" id="toastMessage"></div>
+    </div>
+</div>
+<script src="js/auth.js"></script>
+
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<!-- Közös JavaScript -->
+<script src="js/common.js"></script>
+</body>
+</html>
