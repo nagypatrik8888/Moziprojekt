@@ -109,7 +109,6 @@
                 <tbody id="moviesTable"></tbody>
               </table>
             </div>
-            <div class="cmx-muted small mt-2">Megjegyzés: frontend demo – a filmek a localStorage-ben frissülnek (nem szerver).</div>
           </div>
         </div>
       </div>
