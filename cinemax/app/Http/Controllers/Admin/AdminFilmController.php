@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Genre;
+use App\Models\Language;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -42,6 +44,8 @@ class AdminFilmController extends Controller
         return view('admin.movies.form', [
             'movie' => new Movie(),
             'mode' => 'create',
+            'genres' => Genre::orderBy('name')->get(['id', 'name']),
+            'languages' => Language::orderBy('name')->get(['id', 'name']),
         ]);
     }
 
@@ -51,6 +55,8 @@ class AdminFilmController extends Controller
         return view('admin.movies.form', [
             'movie' => $movie,
             'mode' => 'edit',
+            'genres' => Genre::orderBy('name')->get(['id', 'name']),
+            'languages' => Language::orderBy('name')->get(['id', 'name']),
         ]);
     }
 
@@ -63,7 +69,7 @@ class AdminFilmController extends Controller
             'rating' => ['required', 'numeric'],
             'duration_min' => ['required', 'integer', 'min:1'],
             'description' => ['required', 'string'],
-            'language' => ['required', 'string'],
+            'language' => ['nullable', 'string'],
             'language_id' => ['required', 'integer', 'exists:languages,id'],
             'poster' => ['required', 'mimes:jpg,png,jpeg,webp'] //validáljuk hogy milyen fajta file
 
@@ -80,6 +86,12 @@ class AdminFilmController extends Controller
         $file = $request->file('poster');
         $path = '/storage/' . $file->storePublicly('uploads', 'public');
 
+        // Ha a frontend nem küldte a `language` szabadszöveges nevet, vegyük a languages.name-ből
+        $languageName = $validated['language'] ?? null;
+        if (!$languageName) {
+            $languageName = Language::where('id', $validated['language_id'])->value('name') ?? '';
+        }
+
         $movie = new Movie();
         $movie->title = $validated['title'];
         $movie->genre_id = $validated['genre_id'];
@@ -87,7 +99,7 @@ class AdminFilmController extends Controller
         $movie->rating = $validated['rating'] ?? null;
         $movie->duration_min = $validated['duration_min'];
         $movie->description = $validated['description'];
-        $movie->language = $validated['language'];
+        $movie->language = $languageName;
         $movie->language_id = $validated['language_id'];
         $movie->poster_url = $path;
         $movie->save(); //save menti el DB-be
@@ -111,8 +123,8 @@ class AdminFilmController extends Controller
             'rating' => ['required', 'numeric'],
             'duration_min' => ['required', 'integer', 'min:1'],
             'description' => ['required', 'string'],
-            'language' => ['required', 'string'],
-            'language_id' => ['required', 'integer', 'exists:languages,id'],
+            'language' => ['nullable', 'string'],
+            'language_id' => ['nullable', 'integer', 'exists:languages,id'],
             'poster' => ['mimes:jpg,png,jpeg,webp'] //validáljuk hogy milyen fajta file
 
         ]);
@@ -138,8 +150,10 @@ class AdminFilmController extends Controller
         $movie->rating = $validated['rating'] ?? null;
         $movie->duration_min = $validated['duration_min'];
         $movie->description = $validated['description'];
-        $movie->language = $validated['language'];
-        $movie->language_id = $validated['language_id'];
+        $movie->language = $validated['language'] ?? $movie->language;
+        if (array_key_exists('language_id', $validated) && $validated['language_id'] !== null) {
+            $movie->language_id = $validated['language_id'];
+        }
         if (isset($path)) {
             $movie->poster_url = $path;
         }
@@ -149,7 +163,7 @@ class AdminFilmController extends Controller
             return response()->json([
                 'message' => 'Film Updated',
                 'film_id' => $movie->id,
-            ], 201);
+            ], 200);
         }
 
         return redirect('/admin');

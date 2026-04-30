@@ -54,24 +54,37 @@ class AdminScreeningController extends Controller
             'film_id' => ['required', 'integer', 'exists:films,id'],
             'room_id' => ['required', 'integer', 'exists:rooms,id'],
 
-            'screening_date' => ['required', 'date'],
-            'start_time' => ['required', 'date_format:H:i:s'],
+            'screening_date' => ['required', 'date', 'after_or_equal:today'],
+            'start_time' => ['required', 'date_format:H:i'],
         ]);
 
         if ($validator->fails()) {
             if($request->wantsJson()){
-                return response()->json($validator->errors()); //ha fail json error
+                return response()->json(['errors' => $validator->errors()], 422); //ha fail json error
             }
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $validated = $validator->valid();  //ellenorizzuk letezik e a screening
 
+        // Ütközés-ellenőrzés: ne lehessen ugyanarra a teremre + dátumra + idősávra két vetítés
+        $conflict = Screening::where('room_id', $validated['room_id'])
+            ->where('screening_date', $validated['screening_date'])
+            ->where('start_time', $validated['start_time'].':00')
+            ->exists();
+        if ($conflict) {
+            $msg = 'Erre a teremre és időpontra már van vetítés.';
+            if ($request->wantsJson()) {
+                return response()->json(['errors' => ['start_time' => [$msg]]], 409);
+            }
+            return redirect()->back()->withErrors(['start_time' => $msg])->withInput();
+        }
+
         $screening = new Screening();
         $screening->film_id = $validated['film_id'];
         $screening->room_id = $validated['room_id'];
         $screening->screening_date = $validated['screening_date'];
-        $screening->start_time = $validated['start_time'];
+        $screening->start_time = $validated['start_time'].':00';
         $screening->save();
          if($request->wantsJson()){
             return response()->json([
