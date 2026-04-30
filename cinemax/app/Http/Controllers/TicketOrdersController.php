@@ -69,13 +69,13 @@ class TicketOrdersController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors()); //ha fail json error
+            return response()->json(['errors' => $validator->errors()], 422); //ha fail json error
         }
 
         $validated = $validator->valid();  //ellenorizzuk letezik e a screening
         $screening_row = Screening::where('id','=',$validated['screening_id'])->first();
-        if(!$screening_row){ //Ha nincs ilyen screening akkor hibát jelzünk 
-            return response()->json(['errors'=> ['Screening was not found!']]);
+        if(!$screening_row){ //Ha nincs ilyen screening akkor hibát jelzünk
+            return response()->json(['errors'=> ['Screening was not found!']], 404);
         }
 
         $total_price = 0; //ki kell számolni
@@ -108,33 +108,30 @@ class TicketOrdersController extends Controller
         }
 
         if(!empty($erros)){
-            return response()->json(['errors'=> $erros]);
+            return response()->json(['errors'=> $erros], 409);
         }
 
         $ticket_order_row = TicketOrder::create([
-            'user_id' => auth()->user()->id, //ezt ki kell cserélni majd bejelentkezett felhasználó id-ra 
-            'ticket_id' => 9, //ezt az oszlopot db-ből ki kell törölni
-            'quantity' => 1, //ezt az oszlopot db-ből ki kell törölni
-            'seat_id' => null,//ezt az oszlopot db-ből ki kell törölni
-            'total_price' => $total_price, 
-            'screening_id' => $validated['screening_id']
+            'user_id' => auth()->user()->id,
+            'seat_id' => null, // legacy nullable oszlop
+            'total_price' => $total_price,
+            'screening_id' => $validated['screening_id'],
         ]);
 
         $ticket_order_row->save();
 
         foreach($validated['seats'] as $seat) {
-            $seat_row = TicketOrderSeat::create([
+            TicketOrderSeat::create([
                 'seat_id' => $seat['seat_id'],
-                //'price_id' => $seat['price_id'],
-                'screening_id' => $validated['screening_id'],//ezt az oszlopot db-ből ki kell törölni
-                'ticket_order_id' => $ticket_order_row->id
+                'price_id' => $seat['price_id'],
+                'screening_id' => $validated['screening_id'],
+                'ticket_order_id' => $ticket_order_row->id,
             ]);
-
-            $seat_row->save();
         }
 
         $response_for_frontend['ticket_order_id'] = $ticket_order_row->id;
+        $response_for_frontend['message'] = 'Sikeres foglalás.';
 
-        return response()->json($response_for_frontend);
+        return response()->json($response_for_frontend, 201);
     }
 }

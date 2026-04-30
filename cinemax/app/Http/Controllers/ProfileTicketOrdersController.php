@@ -7,31 +7,51 @@ use Illuminate\Http\Request;
 
 class ProfileTicketOrdersController extends Controller
 {
-    //
+    public function index()
+    {
+        $current_user_id = auth()->user()->id;
 
-    public function index() {
-        $response_for_frontend = [
-            'ticket_orders' => [],
-        ];
-        $current_user_id = auth()->user()->id; 
-        $ticket_order_rows = TicketOrder::where('user_id','=',$current_user_id)->with(['user','screening'])->orderBy('id')->get();
+        $ticket_order_rows = TicketOrder::where('user_id', '=', $current_user_id)
+            ->with([
+                'screening.film.genre',
+                'screening.room',
+                'seats.seat',
+            ])
+            ->orderByDesc('id')
+            ->get();
 
+        $response_for_frontend = ['ticket_orders' => []];
 
-        foreach($ticket_order_rows as $ticket_order) { //ciklusban elemenkent vizsgaljuk a ticket order sorokat
-            $ticket_order_data_for_frontend = [
-                'movie_name' => $ticket_order->screening->film->title,
-                'movie_genre' => $ticket_order->screening->film->genre->name,
-                'movie_duration' => $ticket_order->screening->film->duration_min,
-                'movie_rating' => $ticket_order->screening->film->rating,
-                'screening_date' => $ticket_order->screening->screening_date,
-                'screening_time' => $ticket_order->screening->screening_time,
-                'total_price' => $ticket_order->screening->total_price,
-                'ticket_type' => $ticket_order->price->type,
+        foreach ($ticket_order_rows as $ticket_order) {
+            $screening = $ticket_order->screening;
+            $film = $screening?->film;
+
+            $seats = [];
+            foreach ($ticket_order->seats as $tos) {
+                $seat = $tos->seat;
+                if (!$seat) {
+                    continue;
+                }
+                $seats[] = [
+                    'seat_id' => $seat->id,
+                    'row_num' => $seat->row_num,
+                    'column_num' => $seat->column_num,
+                ];
+            }
+
+            $response_for_frontend['ticket_orders'][] = [
+                'ticket_order_id' => $ticket_order->id,
+                'movie_name'      => $film?->title,
+                'movie_genre'     => $film?->genre?->name,
+                'movie_duration'  => $film?->duration_min,
+                'movie_rating'    => $film?->rating,
+                'screening_date'  => $screening?->screening_date,
+                'screening_time'  => $screening?->start_time,
+                'room'            => $screening?->room?->screen_size,
+                'total_price'     => (float) $ticket_order->total_price,
+                'seats'           => $seats,
             ];
-
-            $response_for_frontend['ticket_orders'][] = $ticket_order_data_for_frontend;
         }
-
 
         return response()->json($response_for_frontend);
     }
