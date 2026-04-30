@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profilom - Cinemax</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap + Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css">
+
+  <!-- Common + page CSS -->
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/profile.css" />
+</head>
+<body>
+
+<!-- Navbar (ugyanaz, mint a többi oldalon) -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+      <i class="bi bi-film"></i> CINEMAX
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Főoldal</a></li>
+        <li class="nav-item"><a class="nav-link" href="movies">Filmek</a></li>
+        <li class="nav-item"><a class="nav-link" href="about">Rólunk</a></li>
+
+        <li class="nav-item ms-3">
+          <a href="login" class="btn btn-outline-gold" id="loginBtn">
+            <i class="bi bi-person"></i> Bejelentkezés
+          </a>
+          <a href="profile" class="btn btn-gold" id="userBtn" style="display:none;">
+            <i class="bi bi-person-circle"></i> <span id="userName"></span>
+          </a>
+        </li>
+      
+          <li class="nav-item" id="navAdminItem" style="display:none;"><a class="nav-link text-white-50 fw-bold" href="admin">ADMIN</a></li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap" style="padding-top: 88px;">
+
+  <section class="profile-top">
+    <div class="profile-left">
+      <div class="avatar"><div class="avatar-inner">👤</div></div>
+
+      <div class="user-meta">
+        <div class="username-row">
+          <div class="username" id="username"></div>
+          <div class="badge" id="badge">SILVER</div>
+        </div>
+        <div class="email" id="email"></div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-k">Foglalások</div>
+            <div class="stat-v" id="bookingCount">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-k">Kedvencek</div>
+            <div class="stat-v" id="favCount">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-k">Pontok</div>
+            <div class="stat-v" id="points">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <a class="btn btn-gold" href="bookings">☰ Foglalásaim</a>
+      <button class="btn btn-outline" id="logoutBtn">⎋ Kijelentkezés</button>
+      <a class="btn btn-ghost" href="movies">🔎 Filmek böngészése</a>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">
+          <span class="card-ico">🎟️</span>
+          <div>
+            <div class="card-name">Foglalásaim</div>
+            <div class="card-sub">Nincs mini jegy — minden egyben az összes foglalásnál.</div>
+          </div>
+        </div>
+        <a class="mini-btn" href="bookings">Összes foglalás</a>
+      </div>
+
+      <div class="summary">
+        <div class="sum-box">
+          <div class="k">Foglalások</div>
+          <div class="v" id="sumBookings">0</div>
+        </div>
+
+        <div class="sum-box">
+          <div class="k">Következő</div>
+          <div class="v small" id="sumNext">Nincs</div>
+        </div>
+
+        <div class="sum-box">
+          <div class="k">Gyors link</div>
+          <a class="link" href="movies">Filmek böngészése →</a>
+        </div>
+      </div>
+
+      <div class="note">
+        Tipp: ha 2 ülést foglalsz, a foglalásoknál 2 külön jegyet kapsz (külön QR-rel).
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Toast (a common.js-hez) -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+  <div id="liveToast" class="toast" role="alert">
+    <div class="toast-body" id="toastMessage"></div>
+  </div>
+</div>
+
+@include('shared.layout.scripts')
+<script src="js/profile.js"></script>
+
+</body>
+</html>

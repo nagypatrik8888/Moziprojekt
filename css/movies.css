@@ -1,0 +1,332 @@
+/* Movies Page Styles */
+.movies-container {
+    padding-top: 100px;
+    min-height: 100vh;
+}
+
+.movie-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    height: 100%;
+}
+
+.movie-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(251, 191, 36, 0.2);
+    border-color: rgba(251, 191, 36, 0.3);
+}
+
+.movie-poster {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    transition: transform 0.4s;
+}
+
+@media (max-width: 768px) {
+    .movie-poster {
+        height: 350px;
+    }
+}
+
+@media (max-width: 576px) {
+    .movie-poster {
+        height: 300px;
+    }
+}
+
+.movie-card:hover .movie-poster {
+    transform: scale(1.1);
+}
+
+.favorite-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.7);
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s;
+    z-index: 10;
+}
+
+@media (max-width: 576px) {
+    .favorite-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.3rem;
+        top: 0.75rem;
+        right: 0.75rem;
+    }
+}
+
+.favorite-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Filter Buttons */
+.filter-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: clamp(0.75rem, 2vw, 0.9rem);
+    cursor: pointer;
+}
+
+@media (max-width: 576px) {
+    .filter-btn {
+        padding: 0.6rem 1rem;
+        margin: 0.25rem;
+        font-size: 0.75rem;
+    }
+}
+
+.filter-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary-gold);
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, var(--primary-gold), var(--primary-orange));
+    color: #000;
+    border-color: transparent;
+}
+/* ===== Seat booking (CinemaCity-like) ===== */
+.screen-label {
+    display: flex;
+    justify-content: center;
+}
+
+.screen-pill {
+    padding: 0.4rem 1.2rem;
+    border-radius: 999px;
+    background: rgba(251, 191, 36, 0.15);
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    color: rgba(255,255,255,0.9);
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+}
+
+.seat-grid {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0 0;
+}
+
+.seat-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.row-label {
+    width: 26px;
+    text-align: center;
+    font-weight: 800;
+    color: rgba(255,255,255,0.7);
+}
+
+.seat {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s, border-color 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.75);
+    user-select: none;
+}
+
+.seat:hover {
+    transform: translateY(-2px);
+    border-color: rgba(251,191,36,0.35);
+}
+
+.seat.occupied {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.08);
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.seat.selected {
+    background: linear-gradient(135deg, var(--primary-gold), var(--primary-orange));
+    border-color: transparent;
+    color: #000;
+    font-weight: 900;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.7);
+}
+
+.seat-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 6px;
+    display: inline-block;
+    border: 1px solid rgba(255,255,255,0.12);
+}
+
+.seat-dot.seat-free { background: rgba(255,255,255,0.06); }
+.seat-dot.seat-selected { background: var(--primary-gold); border-color: rgba(0,0,0,0.2); }
+.seat-dot.seat-occupied { background: rgba(255,255,255,0.08); opacity: 0.5; }
+/* ===== Ticket type rows ===== */
+.ticket-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:10px 12px;
+    border-radius:14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 10px;
+}
+.ticket-right{ display:flex; align-items:center; gap:10px; }
+.ticket-count{ min-width: 18px; text-align:center; font-weight: 900; }
+
+/* ===== Seat booking ===== */
+
+.seat-grid {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 10px;
+}
+
+.seat-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.row-label {
+    width: 26px;
+    text-align: center;
+    font-weight: 900;
+    color: rgba(255,255,255,0.7);
+}
+
+/* ===== ALAP SZÉK (SZABAD) ===== */
+.seat {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: #16a34a;              /* ZÖLD */
+    border: 2px solid #22c55e;
+    cursor: pointer;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #052e16;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.seat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 2px rgba(34,197,94,0.4);
+}
+
+/* ===== KIVÁLASZTOTT ===== */
+.seat.selected {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b); /* ARANY */
+    border-color: #fbbf24;
+    color: #000;
+    font-weight: 900;
+    box-shadow: 0 0 0 2px rgba(251,191,36,0.5);
+}
+
+/* ===== FOGLALT ===== */
+.seat.occupied {
+    background: #9ca3af;              /* SZÜRKE */
+    border-color: #6b7280;
+    color: #1f2937;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+}
+/* ===== Movie card text visibility fix ===== */
+
+.movie-card {
+    background: #111827; /* sötét háttér */
+    color: #f9fafb;      /* ALAP: FEHÉR */
+}
+
+.movie-card h5 {
+    color: #ffffff;      /* film cím */
+}
+
+.movie-card .text-muted {
+    color: #d1d5db !important; /* világos szürke meta */
+}
+
+.movie-card p {
+    color: #e5e7eb;      /* film leírás */
+    line-height: 1.5;
+}
+
+.movie-card i {
+    color: #fbbf24;      /* ikonok arany */
+}
+/* ===== FIX: Ticket + / - gombok nem kattinthatók ===== */
+
+/* Biztosítsuk, hogy a ticket section ne legyen takarva */
+#ticketSection {
+    position: relative;
+    z-index: 5;
+}
+
+/* Plusz és mínusz gombok mindig kattinthatók legyenek */
+.ticket-plus,
+.ticket-minus {
+    position: relative;
+    z-index: 10;
+    pointer-events: auto !important;
+}
+
+/* Modal content fölé ne üljön rá semmi */
+.modal-body {
+    position: relative;
+    z-index: 1;
+}
+
+/* Ha bármi absolute elem ráülne */
+.seat-grid,
+#seatsArea {
+    position: relative;
+    z-index: 1;
+}

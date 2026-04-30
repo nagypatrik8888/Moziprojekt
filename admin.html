@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin - Cinemax</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap + Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css">
+
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-cmx-nav sticky-top">
+    <div class="container-fluid px-3">
+      <a class="navbar-brand d-flex align-items-center gap-2 cmx-brand" href="index.html">
+        <span class="border border-warning rounded-2 d-inline-flex align-items-center justify-content-center" style="width:28px;height:28px;">▦</span>
+        <span>CINEMAX</span>
+      </a>
+
+      <button class="navbar-toggler border-warning" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav mx-auto gap-lg-3">
+          <li class="nav-item"><a class="nav-link text-white-50 fw-bold" href="index.html">FŐOLDAL</a></li>
+          <li class="nav-item"><a class="nav-link text-white-50 fw-bold" href="movies.html">FILMEK</a></li>
+          <li class="nav-item"><a class="nav-link text-white-50 fw-bold" href="bookings.html">FOGLALÁSOK</a></li>
+          <li class="nav-item" id="navAdminItem"><a class="nav-link text-white fw-bold" href="admin.html">ADMIN</a></li>
+        </ul>
+
+        <div class="d-flex gap-2 align-items-center">
+          <button class="btn btn-cmx-outline px-3 py-2" data-cmx-logout title="Kijelentkezés">
+            <i class="bi bi-box-arrow-right"></i>
+          </button>
+          <a class="btn cmx-pill px-3 py-2 d-inline-flex align-items-center gap-2" id="navUserLink" href="login.html">
+            <i class="bi bi-person-circle"></i>
+            <span id="navUsername">BEJELENTKEZÉS</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4">
+    <div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
+      <div>
+        <h1 class="cmx-title mb-1">ADMIN</h1>
+        <div class="cmx-muted" id="adminSub">Betöltés...</div>
+      </div>
+
+      <div class="d-flex gap-2 flex-wrap">
+        <button class="btn btn-cmx px-4" id="btnResetDemo"><i class="bi bi-arrow-counterclockwise"></i> Demo adatok</button>
+        <button class="btn btn-cmx-outline px-4" id="btnWipeAll"><i class="bi bi-trash3"></i> Minden törlése</button>
+      </div>
+    </div>
+
+    <div id="noAccess" class="cmx-card p-4 mt-3 text-center" style="display:none;">
+      <div class="fw-black fs-4 mb-2"><i class="bi bi-shield-lock"></i> Nincs jogosultság</div>
+      <div class="cmx-muted mb-3">Az admin oldal csak admin felhasználóknak elérhető.</div>
+      <a class="btn btn-cmx-gold px-4" href="index.html"><i class="bi bi-house"></i> Vissza a főoldalra</a>
+    </div>
+
+    <div id="adminWrap" style="display:none;">
+      <div class="row g-3 mt-1">
+        <div class="col-12 col-lg-4">
+          <div class="cmx-card p-3 h-100">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="fw-black fs-5">Statisztika</div>
+              <i class="bi bi-graph-up"></i>
+            </div>
+            <div class="mt-3 d-flex flex-column gap-2">
+              <div class="statline"><span>Felhasználók</span><b id="statUsers">0</b></div>
+              <div class="statline"><span>Foglalások</span><b id="statBookings">0</b></div>
+              <div class="statline"><span>Jegyek</span><b id="statTickets">0</b></div>
+              <div class="statline"><span>Filmek</span><b id="statMovies">0</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-8">
+          <div class="cmx-card p-3 h-100">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+              <div class="fw-black fs-5">Filmek kezelése</div>
+              <button class="btn btn-cmx-gold px-3" id="btnAddMovie"><i class="bi bi-plus-circle"></i> Új film</button>
+            </div>
+
+            <div class="table-responsive mt-3">
+              <table class="table table-dark table-striped align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th style="width:80px;">ID</th>
+                    <th>Cím</th>
+                    <th>Kategória</th>
+                    <th style="width:120px;">Értékelés</th>
+                    <th style="width:120px;">Művelet</th>
+                  </tr>
+                </thead>
+                <tbody id="moviesTable"></tbody>
+              </table>
+            </div>
+            <div class="cmx-muted small mt-2">Megjegyzés: frontend demo – a filmek a localStorage-ben frissülnek (nem szerver).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmx-card p-3 mt-3">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+          <div class="fw-black fs-5">Foglalások</div>
+          <div class="d-flex gap-2 flex-wrap">
+            <input class="form-control form-control-sm bg-dark border-secondary text-white" id="q" placeholder="Keresés (film / email / ülés)" style="max-width:280px;">
+            <button class="btn btn-cmx px-3" id="btnRefresh"><i class="bi bi-arrow-repeat"></i> Frissítés</button>
+          </div>
+        </div>
+
+        <div class="table-responsive mt-3">
+          <table class="table table-dark table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Időpont</th>
+                <th>Film</th>
+                <th>Ülések</th>
+                <th style="width:140px;">Email</th>
+                <th style="width:120px;">Művelet</th>
+              </tr>
+            </thead>
+            <tbody id="bookingsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
