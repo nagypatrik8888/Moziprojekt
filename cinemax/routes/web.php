@@ -34,7 +34,12 @@ Route::get('/about', function () {
 
 Route::get('/login', function () {
     return view('login');
-});
+})->name('login');
+
+// Auth (saját, Fortify nélkül) — JSON-only a frontend SPA-flow-hoz
+Route::post('/login', [UserController::class, 'login']);
+Route::post('/register', [UserController::class, 'register']);
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth');
 
 Route::get('/bookings', function () {
     return view('bookings');
@@ -56,7 +61,10 @@ Route::prefix('/admin')->middleware([IsAdmin::class])->group(function () {
     //rooms,users,ticket_orders,screening/update vissza van
 
     Route::get('/screenings/create', function () {
-        return view('admin.screenings.create');
+        return view('admin.screenings.create', [
+            'movies' => \App\Models\Movie::orderBy('title')->get(['id', 'title']),
+            'rooms' => \App\Models\Room::orderBy('id')->get(),
+        ]);
     });
 
     Route::post('/screenings', [AdminScreeningController::class, 'store']);
