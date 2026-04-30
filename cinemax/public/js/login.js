@@ -63,9 +63,7 @@ function updateStrengthUI(pwd, fill, text) {
     }
 }
 
-if (loginPassword && strengthFill) {
-    loginPassword.addEventListener('input', () => updateStrengthUI(loginPassword.value, strengthFill, strengthText));
-}
+// A bejelentkezés formon nem mutatunk erősség csíkot — csak a regisztrációnál.
 if (regPassword && regStrengthFill) {
     regPassword.addEventListener('input', () => updateStrengthUI(regPassword.value, regStrengthFill, regStrengthText));
 }

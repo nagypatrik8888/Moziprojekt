@@ -40,13 +40,6 @@
             <div class="mb-3">
                 <label>Jelszó</label>
                 <input type="password" id="loginPassword" class="form-control" required>
-
-                <div class="password-strength mt-2">
-                    <div class="strength-bar">
-                        <div class="strength-fill" id="strengthFill"></div>
-                    </div>
-                    <small id="strengthText">Jelszó erőssége</small>
-                </div>
             </div>
 
             <button class="btn btn-gold w-100">Bejelentkezés</button>

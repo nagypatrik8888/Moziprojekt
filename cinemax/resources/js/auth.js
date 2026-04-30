@@ -54,15 +54,7 @@ function cmxSetNavbar() {
   }
 
   if (linkEl) {
-    linkEl.href = user ? "profile" : "login";
-  }
-
-  
-  // Admin menüpont (ha van a navbarban). Egyetlen forrás: backend `is_admin` flag.
-  const adminItem = document.getElementById("navAdminItem");
-  if (adminItem) {
-    const isAdmin = !!(user && user.is_admin === true);
-    adminItem.style.display = isAdmin ? "" : "none";
+    linkEl.href = user ? "profile.html" : "login.html";
   }
 
   // Logout gombok elrejtése, ha nincs user
@@ -74,13 +66,13 @@ function cmxSetNavbar() {
 function cmxRequireAuth() {
   const user = cmxGetUser();
   if (!user) {
-    window.location.href = "login";
+    window.location.href = "login.html";
     return false;
   }
   return true;
 }
 
-function cmxLogout(redirectTo = "login") {
+function cmxLogout(redirectTo = "login.html") {
   CMX_KEYS_TO_CLEAR.forEach(k => localStorage.removeItem(k));
 
   try {
@@ -98,7 +90,7 @@ function cmxBindLogoutButtons() {
   document.querySelectorAll("[data-cmx-logout]").forEach(btn => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
-      cmxLogout("login");
+      cmxLogout("login.html");
     });
   });
 }

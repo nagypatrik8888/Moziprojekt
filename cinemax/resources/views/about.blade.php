@@ -55,12 +55,17 @@
     <div class="container py-5">
         <h1 class="section-title text-center mb-5">Rólunk</h1>
 
+        @php
+            $cmxFoundingYear = 2022;
+            $cmxYears = max(1, (int) date('Y') - $cmxFoundingYear);
+        @endphp
+
         <!-- Intro -->
         <div class="card bg-dark border-0 mb-5 p-4 about-hero">
             <div class="card-body">
-                <h2 class="section-title h3 mb-3">Cinemax – 3 éve veletek</h2>
+                <h2 class="section-title h3 mb-3">Cinemax – {{ $cmxYears }} éve veletek</h2>
                 <p class="lead mb-3">
-                    A Cinemax 2022 óta működik Magyarországon, és mára az ország egyik legkedveltebb moziélményévé vált.
+                    A Cinemax {{ $cmxFoundingYear }} óta működik Magyarországon, és mára az ország egyik legkedveltebb moziélményévé vált.
                 </p>
                 <p class="mb-2">
                     Pécsi központunkban 5 modern termünkben várunk – kényelmes fotelekkel, Dolby hanggal, és igazi “mozis” hangulattal.
@@ -75,7 +80,7 @@
         <div class="row g-4 mb-5">
             <div class="col-md-4">
                 <div class="stat-card">
-                    <div class="stat-number">2+</div>
+                    <div class="stat-number">{{ $cmxYears }}+</div>
                     <div class="stat-label">Év tapasztalat</div>
                 </div>
             </div>
