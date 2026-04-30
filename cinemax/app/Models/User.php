@@ -26,6 +26,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'user_type',
     ];
 
     /**
@@ -51,9 +52,14 @@ class User extends Authenticatable
         ];
     }
 
-    public function is_admin(): bool 
+    public function is_admin(): bool
     {
-        return $this->get_user_types()[$this->user_type] === self::USER_TYPE_ADMIN;
+        $types = $this->get_user_types();
+        $key = $this->user_type;
+        if ($key === null || !array_key_exists($key, $types)) {
+            return false;
+        }
+        return $types[$key] === self::USER_TYPE_ADMIN;
     }
 
     public function get_user_types() {
