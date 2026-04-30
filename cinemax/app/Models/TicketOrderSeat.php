@@ -12,6 +12,7 @@ class TicketOrderSeat extends Model
     
     protected $fillable = [
         'seat_id',
+        'price_id',
         'screening_id',
         'ticket_order_id',
     ];

@@ -11,10 +11,8 @@ class TicketOrder extends Model
     protected $fillable = [
         'user_id',
         'screening_id',
-        'price_id',
-        'quantity',
         'total_price',
-        'ticket_id',
+        'seat_id', // legacy nullable, későbbi cleanup-ra vár
     ];
 
 
