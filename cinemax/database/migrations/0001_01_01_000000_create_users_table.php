@@ -13,7 +13,7 @@ return new class extends Migration
     {
         if (Schema::hasTable('users')) {
             Schema::table('users', function (Blueprint $table) {
-                    foreach (['first_name', 'last_name', 'phone', 'salt'] as $column) {
+                    foreach (['first_name','firstname', 'role', 'last_name','lastname', 'phone', 'salt'] as $column) {
                         if (Schema::hasColumn('users', $column)) {
                             $table->dropColumn($column);
                         }
